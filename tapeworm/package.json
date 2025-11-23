@@ -1,0 +1,13 @@
+{
+  "name": "tapeworm",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "dist/tapeworm.cjs.js",
+  "module": "dist/tapeworm.es.js",
+  "browser": "dist/tapeworm.umd.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "vite build"
+  }
+}
