@@ -17,19 +17,25 @@ export default class ToolSchema {
 /**
  * A builder for tool schemas
  */
-export class ToolBuilder {
-    parameters?: Parameter[];
+export class ToolSchemaBuilder {
+    parameters!: Parameter[];
     output!: string;
 
-    addParameter(parameter: Parameter) {
+    addParameter(parameter: Parameter) : ToolSchemaBuilder {
         if (this.parameters == undefined) {
             this.parameters = [];
         }
-        this.parameters.push(parameter)
+        this.parameters.push(parameter);
+        return this;
     }
 
-    setOutput(output : string) {
+    setOutput(output : string) : ToolSchemaBuilder {
         this.output = output;
+        return this;
+    }
+
+    build() : ToolSchema {
+        return new ToolSchema(this.parameters, this.output);
     }
 
 }
@@ -44,14 +50,17 @@ export class Parameter {
     name : string;
     description: string;
     type: string;
+    required: boolean;
 
     constructor(name: string,
         description: string,
-        type: string
+        type: string,
+        required: boolean
     ) {
         this.name = name;
         this.description = description;
         this.type = type;
+        this.required = required;
         this.assertValidType()
     }
 
@@ -65,20 +74,32 @@ export class ParameterBuilder {
     private name! : string;
     private description!: string;
     private type!: string;
+    private required?: boolean;
 
-    setName(name : string) {
+    setName(name : string) : ParameterBuilder {
         this.name = name;
+        return this;
     }
 
-    setDescription(description : string) {
+    setDescription(description : string) : ParameterBuilder {
         this.description = description;
+        return this;
     }
 
-    setType(type : string) {
+    setType(type : string) : ParameterBuilder {
         this.type = type;
+        return this;
+    }
+    
+    setRequired(required : boolean) : ParameterBuilder {
+        this.required = required;
+        return this;
     }
 
     build() : Parameter {
-        return new Parameter(this.name, this.description, this.type);
+        if (this.required == undefined) {
+            this.required = false;
+        }
+        return new Parameter(this.name, this.description, this.type, this.required);
     }
 }

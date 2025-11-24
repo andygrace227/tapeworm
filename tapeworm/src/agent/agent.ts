@@ -12,10 +12,5 @@ export default class Agent {
     invoke(query : string) {
         
     }
-
-
-
-
-
-
+    
 }
