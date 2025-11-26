@@ -2,25 +2,48 @@ import type { Message } from "../conversation/conversation";
 import type Tool from "../tool/tool";
 
 
+/**
+ * A Model represents the LLM backend for the agent.
+ */
 export class Model {
-
     async invoke(request: ModelRequest) : Promise<ModelResponse> {
         throw new ModelNotImplementedError("The invoke function for this model was not correctly implemented.");
     }
-
 }
 
-
 export class ModelRequest {
+    messages : Message[];
+    tools: Tool[];
+
+    constructor(messages: Message[], tools : Tool[]) {
+        this.messages = messages;
+        this.tools = tools;
+    }
+
+    static builder() : ModelRequestBuilder {
+        return new ModelRequestBuilder();
+    }
+}
+
+export class ModelRequestBuilder {
     messages!: Message[];
     tools!: Tool[];
 
-    setMessages(messages: Message[]) {
+    setMessages(messages: Message[]) : ModelRequestBuilder {
         this.messages = messages;
+        return this;
     }
 
-    setTools(tools: Tool[]) {
+    setTools(tools: Tool[]) : ModelRequestBuilder {
         this.tools = tools;
+        return this;
+    }
+
+    build() : ModelRequest {
+        if (this.tools == undefined) {
+            this.tools = [];
+        }
+        return new ModelRequest(this.messages, this.tools);
     }
 
 }
@@ -34,6 +57,10 @@ export class ModelResponse {
         this.toolCalls = toolCalls;
         this.role = role;
         this.content = content;
+    }
+
+    static builder() : ModelResponseBuilder {
+        return new ModelResponseBuilder();
     }
 }
 
