@@ -1,3 +1,4 @@
+import ToolCall from "../tool/toolCall";
 import type { Parameter } from "../tool/toolschema";
 import { Model, ModelRequest, ModelResponse, ModelResponseBuilder } from "./model";
 
@@ -40,8 +41,34 @@ export class OllamaModel extends Model {
 
         let message = await response.json();
 
+        let toolCalls : ToolCall[] = [];
+
+        if (message['message']['tool_calls']) {
+            for (let toolCallKey in message['message']['tool_calls']){
+                const toolCallObject = message['message']['tool_calls'][toolCallKey];
+                let type : string = Object.keys(toolCallObject)[0];
+                let name : string = toolCallObject[type]?.name;
+                let sequence : number | undefined = toolCallObject[type]?.index;
+                let parameterObject : any = toolCallObject[type]?.arguments;
+
+                let parameters : Map<string, any> = new Map();
+                for (let param in parameterObject) {
+                    parameters.set(param, parameterObject[param]);
+
+                }
+                toolCalls.push(
+                    ToolCall.builder()
+                        .setName(name)
+                        .setType(type)
+                        .setParameters(parameters)
+                        .setSequence(sequence)
+                        .build()
+                );
+            }
+        }
+
         return new ModelResponseBuilder()
-            .withToolCalls(message['message']['tool_calls'])
+            .withToolCalls(toolCalls)
             .withRole(message['message']['role'])
             .withContent(message['message']['content'])
             .build();

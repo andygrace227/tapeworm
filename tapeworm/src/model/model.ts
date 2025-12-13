@@ -1,5 +1,6 @@
 import type { Message } from "../conversation/conversation";
 import type Tool from "../tool/tool";
+import type ToolCall from "../tool/toolCall";
 
 
 /**
@@ -8,6 +9,10 @@ import type Tool from "../tool/tool";
 export class Model {
     async invoke(request: ModelRequest) : Promise<ModelResponse> {
         throw new ModelNotImplementedError("The invoke function for this model was not correctly implemented.");
+    }
+
+    tokenLimit() {
+        throw new ModelNotImplementedError("The tokenLimit function for this model was not correctly implemented.");
     }
 }
 
@@ -49,11 +54,11 @@ export class ModelRequestBuilder {
 }
 
 export class ModelResponse {
-    toolCalls?: any[];
+    toolCalls?: ToolCall[];
     role?: string;
     content?: string;
 
-    constructor(toolCalls: any[] | undefined, role: string | undefined, content: string | undefined) {
+    constructor(toolCalls: ToolCall[], role: string | undefined, content: string | undefined) {
         this.toolCalls = toolCalls;
         this.role = role;
         this.content = content;
@@ -65,11 +70,11 @@ export class ModelResponse {
 }
 
 export class ModelResponseBuilder {
-    toolCalls?: any[];
+    toolCalls!: ToolCall[];
     role?: string;
     content?: string;
 
-    withToolCalls(toolCalls : any) : ModelResponseBuilder {
+    withToolCalls(toolCalls : ToolCall[]) : ModelResponseBuilder {
         this.toolCalls = toolCalls;
         return this;
     }
