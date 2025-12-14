@@ -9,6 +9,12 @@ export class OllamaModel extends Model {
     model : string;
     options? : any;
 
+    /**
+     * Create a model wrapper for an Ollama chat endpoint.
+     * @param endpoint Base URL of the Ollama server (e.g., http://localhost:11434).
+     * @param model Model name/tag to use for inference.
+     * @param options Additional Ollama options passed through to the API.
+     */
     constructor(endpoint: string, model: string, options: any) {
         super();
         this.endpoint = endpoint;
@@ -16,11 +22,15 @@ export class OllamaModel extends Model {
         this.options = options;
     }
 
+    /**
+     * Call the Ollama chat API with the provided conversation and tools.
+     * Formats the request, performs the HTTP POST, and translates the response into a ModelResponse.
+     */
     async invoke(request: ModelRequest) : Promise<ModelResponse> {
         let requestObject : any = {
             model: this.model,
-            messages: request.messages,
-            tools: request.tools,
+            messages: this._formatMessages(request),
+            tools: this._formatTools(request),
             options: this.options
         }
 
@@ -74,6 +84,9 @@ export class OllamaModel extends Model {
             .build();
     }
 
+    /**
+     * Convert internal tool definitions into the JSON schema format expected by Ollama.
+     */
     _formatTools(request: ModelRequest) : any {
         let tools = [];
 
@@ -109,9 +122,30 @@ export class OllamaModel extends Model {
         return tools;
     }
 
+    /**
+     * Convert internal message objects into Ollama's chat message shape.
+     * Passes through assistant/system/user roles and maps tool role into the expected structure.
+     */
     _formatMessages(request: ModelRequest) : any {
         let messageObject = [];
 
+        for (let message of request.messages) {
+            if (message.role == "assistant" || message.role == "system" || message.role == "user") {
+                messageObject.push(message);
+                continue;
+            }
+
+            if (message.role == "tool") {
+                messageObject.push(
+                    {
+                        role: "tool",
+                        content: message.content,
+                        tool_name: message.toolName
+                    }
+                )
+            }
+        }
+        return messageObject;
     }
 
 }

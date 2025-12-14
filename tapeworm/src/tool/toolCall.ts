@@ -1,5 +1,9 @@
 
 
+/**
+ * Represents a single tool invocation returned by a model, including the target
+ * tool name, argument map, type (function/spec), and optional sequence number.
+ */
 export default class ToolCall {
     sequence: number | undefined;
     name: string;
@@ -19,6 +23,9 @@ export default class ToolCall {
 
 }
 
+/**
+ * Fluent builder for constructing ToolCall instances from model output.
+ */
 export class ToolCallBuilder {
     sequence!: number | undefined;
     name!: string;

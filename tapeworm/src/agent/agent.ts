@@ -53,9 +53,13 @@ export default class Agent {
 
             if (response.toolCalls != undefined && response.toolCalls.length != 0) {
                 doneWithCalls = false;
-                for (let toolCall in response.toolCalls) {
-                    this.generateToolNameToIndexMap();
+                response.toolCalls.sort(
+                    (a, b) => {
+                    return (a.sequence ?? 0) < (b.sequence ?? 0) ? -1 : 1;
+                });
 
+                for (let toolCall in response.toolCalls) {
+                    this._runTool(response.toolCalls[toolCall]);
                 }
             }
 
@@ -76,7 +80,34 @@ export default class Agent {
     }
 
     async _runTool(toolCall : ToolCall) : Promise<any> {
+        this.generateToolNameToIndexMap();
+        
+        if (toolCall.name in this.toolNameToIndexMap == false) {
+            // Error - this tool call does not exist in this agent.
+        }
 
+        let tool = this.tools[this.toolNameToIndexMap[toolCall.name]];
+
+        try {
+            let result = tool.execute(toolCall.parameters);
+            this.conversation.append(
+                Message.builder()
+                    .setRole("tool")
+                    .setToolName(toolCall.name)
+                    .setContent(JSON.stringify(result))
+                    .build()
+            )
+            // Result was good. Save it
+        } catch (error) {
+            // Tool encountered an error.
+            this.conversation.append(
+                Message.builder()
+                    .setRole("tool")
+                    .setToolName(toolCall.name)
+                    .setContent(JSON.stringify(error))
+                    .build()
+            )
+        }
     }
 
     generateToolNameToIndexMap() {
