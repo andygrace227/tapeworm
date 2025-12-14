@@ -45,7 +45,7 @@ export default class Agent {
             this.conversation.append(
                 Message.builder()
                     .setRole(response.role ?? 'assistant')
-                    .content(response.content ?? '')
+                    .setContent(response.content ?? '')
                     .build()
             );
 

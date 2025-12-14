@@ -40,7 +40,6 @@ export class ToolCallBuilder {
     setName(name: string) {
         this.name = name;
         return this;
-
     }
 
     setParameters(parameters: Map<string, any>) : ToolCallBuilder{
