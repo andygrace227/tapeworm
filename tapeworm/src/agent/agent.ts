@@ -24,15 +24,15 @@ export default class Agent {
             this.conversation.append(
                 Message
                     .builder()
-                    .setRole("system")
-                    .setContent(this.system_prompt)
+                    .role("system")
+                    .content(this.system_prompt)
                 .build()
             )
         }
         this.conversation.append(
             Message.builder()
-                .setRole("user")
-                .setContent(query)
+                .role("user")
+                .content(query)
                 .build()
         );
 
@@ -44,9 +44,9 @@ export default class Agent {
 
             this.conversation.append(
                 Message.builder()
-                    .setRole(response.role ?? 'assistant')
-                    .setContent(response.content ?? '')
-                    .setThinking(response.thinking ?? '')
+                    .role(response.role ?? 'assistant')
+                    .content(response.content ?? '')
+                    .thinking(response.thinking ?? '')
                     .build()
             );
 
@@ -76,8 +76,8 @@ export default class Agent {
 
         return await this.model.invoke(
             new ModelRequestBuilder()
-                .setMessages(this.conversation?.messages)
-                .setTools(this.tools)
+                .messages(this.conversation?.messages)
+                .tools(this.tools)
                 .build()
         );
 
@@ -98,9 +98,9 @@ export default class Agent {
             let result = tool.execute(toolCall.parameters);
             this.conversation.append(
                 Message.builder()
-                    .setRole("tool")
-                    .setToolName(toolCall.name)
-                    .setContent(JSON.stringify(result))
+                    .role("tool")
+                    .toolName(toolCall.name)
+                    .content(JSON.stringify(result))
                     .build()
             )
             // Result was good. Save it
@@ -108,9 +108,9 @@ export default class Agent {
             // Tool encountered an error.
             this.conversation.append(
                 Message.builder()
-                    .setRole("tool")
-                    .setToolName(toolCall.name)
-                    .setContent(JSON.stringify(error))
+                    .role("tool")
+                    .toolName(toolCall.name)
+                    .content(JSON.stringify(error))
                     .build()
             )
         }

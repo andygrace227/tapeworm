@@ -43,22 +43,22 @@ export class ModelRequest {
 }
 
 export class ModelRequestBuilder {
-    messages!: Message[];
-    tools!: Tool[];
+    private _messages!: Message[];
+    private _tools!: Tool[];
 
     /**
      * Supply the conversation messages to include.
      */
-    setMessages(messages: Message[]) : ModelRequestBuilder {
-        this.messages = messages;
+    messages(messages: Message[]) : ModelRequestBuilder {
+        this._messages = messages;
         return this;
     }
 
     /**
      * Supply the tool list for this request.
      */
-    setTools(tools: Tool[]) : ModelRequestBuilder {
-        this.tools = tools;
+    tools(tools: Tool[]) : ModelRequestBuilder {
+        this._tools = tools;
         return this;
     }
 
@@ -66,10 +66,10 @@ export class ModelRequestBuilder {
      * Build the ModelRequest, defaulting tools to an empty array.
      */
     build() : ModelRequest {
-        if (this.tools == undefined) {
-            this.tools = [];
+        if (this._tools == undefined) {
+            this._tools = [];
         }
-        return new ModelRequest(this.messages, this.tools);
+        return new ModelRequest(this._messages, this._tools);
     }
 
 }
@@ -99,32 +99,32 @@ export class ModelResponse {
 }
 
 export class ModelResponseBuilder {
-    toolCalls!: ToolCall[];
-    role?: string;
-    content?: string;
-    thinking? : string;
+    private _toolCalls!: ToolCall[];
+    private _role?: string;
+    private _content?: string;
+    private _thinking? : string;
 
     /**
      * Attach tool calls to the response.
      */
-    withToolCalls(toolCalls : ToolCall[]) : ModelResponseBuilder {
-        this.toolCalls = toolCalls;
+    toolCalls(toolCalls : ToolCall[]) : ModelResponseBuilder {
+        this._toolCalls = toolCalls;
         return this;
     }
 
     /**
      * Set the role for the response message.
      */
-    withRole(role: string) : ModelResponseBuilder{
-        this.role = role;
+    role(role: string) : ModelResponseBuilder{
+        this._role = role;
         return this;
     }
 
     /**
      * Set the textual content for the response message.
      */
-    withContent(content: string) : ModelResponseBuilder {
-        this.content = content;
+    content(content: string) : ModelResponseBuilder {
+        this._content = content;
         return this;
     }
 
@@ -132,8 +132,8 @@ export class ModelResponseBuilder {
     /**
      * Set the thinking content for the response message.
      */
-    withThinking(thinking: string) : ModelResponseBuilder {
-        this.thinking = thinking;
+    thinking(thinking: string) : ModelResponseBuilder {
+        this._thinking = thinking;
         return this;
     }
 
@@ -141,7 +141,7 @@ export class ModelResponseBuilder {
      * Build the ModelResponse from the collected fields.
      */
     build() : ModelResponse {
-        return new ModelResponse(this.toolCalls, this.role, this.content, this.thinking);
+        return new ModelResponse(this._toolCalls, this._role, this._content, this._thinking);
     }
 }
 

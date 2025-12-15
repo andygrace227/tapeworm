@@ -57,7 +57,7 @@ const buildAgent = (responses: any[], tools: Tool[] = []) => {
 describe('Agent.invoke', () => {
     it('initializes the conversation and forwards messages to the model', async () => {
         const modelResponses = [
-            ModelResponse.builder().withRole('assistant').withContent('hi there').build(),
+            ModelResponse.builder().role('assistant').content('hi there').build(),
         ];
         const agent = buildAgent(modelResponses);
 
@@ -76,19 +76,19 @@ describe('Agent.invoke', () => {
 
     it('runs returned tool calls and appends the tool output to the conversation', async () => {
         const toolCall = new ToolCallBuilder()
-            .setSequence(0)
-            .setName('echo')
-            .setParameters(new Map([['value', 'ping']]))
-            .setType('function')
+            .sequence(0)
+            .name('echo')
+            .parameters(new Map([['value', 'ping']]))
+            .type('function')
             .build();
 
         const responses = [
             ModelResponse.builder()
-                .withRole('assistant')
-                .withContent('calling tool')
-                .withToolCalls([toolCall])
+                .role('assistant')
+                .content('calling tool')
+                .toolCalls([toolCall])
                 .build(),
-            ModelResponse.builder().withRole('assistant').withContent('done').build(),
+            ModelResponse.builder().role('assistant').content('done').build(),
         ];
 
         const tool = new EchoTool();

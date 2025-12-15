@@ -27,36 +27,36 @@ export default class ToolCall {
  * Fluent builder for constructing ToolCall instances from model output.
  */
 export class ToolCallBuilder {
-    sequence!: number | undefined;
-    name!: string;
-    parameters!: any;
-    type!: string;
+    private _sequence!: number | undefined;
+    private _name!: string;
+    private _parameters!: any;
+    private _type!: string;
 
-    setSequence(sequence: number | undefined) : ToolCallBuilder {
-        this.sequence = sequence;
+    sequence(sequence: number | undefined) : ToolCallBuilder {
+        this._sequence = sequence;
         return this;
     }
 
-    setName(name: string) {
-        this.name = name;
+    name(name: string) {
+        this._name = name;
         return this;
     }
 
-    setParameters(parameters: any) : ToolCallBuilder{
-        this.parameters = parameters;
+    parameters(parameters: any) : ToolCallBuilder{
+        this._parameters = parameters;
         return this;
     }
 
-    setType(type: string) : ToolCallBuilder{
-        this.type = type;
+    type(type: string) : ToolCallBuilder{
+        this._type = type;
         return this;
     }
 
     build() : ToolCall {
-        if (this.sequence == undefined) {
-            this.sequence = 0;
+        if (this._sequence == undefined) {
+            this._sequence = 0;
         }
-        return new ToolCall(this.sequence, this.name, this.parameters, this.type);
+        return new ToolCall(this._sequence, this._name, this._parameters, this._type);
     }
 
 

@@ -31,18 +31,18 @@ export default class ToolSchema {
  * A builder for tool schemas
  */
 export class ToolSchemaBuilder {
-    parameters!: Parameter[];
-    output!: string;
+    private _parameters!: Parameter[];
+    private _output!: string;
 
     /**
      * Add a parameter definition to the schema.
      * @param parameter Fully constructed parameter to append.
      */
     addParameter(parameter: Parameter) : ToolSchemaBuilder {
-        if (this.parameters == undefined) {
-            this.parameters = [];
+        if (this._parameters == undefined) {
+            this._parameters = [];
         }
-        this.parameters.push(parameter);
+        this._parameters.push(parameter);
         return this;
     }
 
@@ -50,8 +50,8 @@ export class ToolSchemaBuilder {
      * Describe the output of the tool.
      * @param output Text description of what the tool returns.
      */
-    setOutput(output : string) : ToolSchemaBuilder {
-        this.output = output;
+    output(output : string) : ToolSchemaBuilder {
+        this._output = output;
         return this;
     }
 
@@ -59,7 +59,10 @@ export class ToolSchemaBuilder {
      * Build the ToolSchema instance from the collected fields.
      */
     build() : ToolSchema {
-        return new ToolSchema(this.parameters, this.output);
+        if (this._parameters == undefined) {
+            this._parameters = [];
+        }
+        return new ToolSchema(this._parameters, this._output);
     }
 
 }
@@ -110,40 +113,40 @@ export class Parameter {
 }
 
 export class ParameterBuilder {
-    private name! : string;
-    private description!: string;
-    private type!: string;
-    private required?: boolean;
+    private _name! : string;
+    private _description!: string;
+    private _type!: string;
+    private _required?: boolean;
 
     /**
      * Set the parameter name.
      */
-    setName(name : string) : ParameterBuilder {
-        this.name = name;
+    name(name : string) : ParameterBuilder {
+        this._name = name;
         return this;
     }
 
     /**
      * Set the parameter description.
      */
-    setDescription(description : string) : ParameterBuilder {
-        this.description = description;
+    description(description : string) : ParameterBuilder {
+        this._description = description;
         return this;
     }
 
     /**
      * Set the parameter type.
      */
-    setType(type : string) : ParameterBuilder {
-        this.type = type;
+    type(type : string) : ParameterBuilder {
+        this._type = type;
         return this;
     }
     
     /**
      * Mark the parameter as required or optional.
      */
-    setRequired(required : boolean) : ParameterBuilder {
-        this.required = required;
+    required(required : boolean) : ParameterBuilder {
+        this._required = required;
         return this;
     }
 
@@ -151,9 +154,9 @@ export class ParameterBuilder {
      * Build a Parameter instance using the accumulated fields.
      */
     build() : Parameter {
-        if (this.required == undefined) {
-            this.required = false;
+        if (this._required == undefined) {
+            this._required = false;
         }
-        return new Parameter(this.name, this.description, this.type, this.required);
+        return new Parameter(this._name, this._description, this._type, this._required);
     }
 }

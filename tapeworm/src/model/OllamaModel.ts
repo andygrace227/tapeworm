@@ -63,20 +63,20 @@ export default class OllamaModel extends Model {
                 let parameterObject : any = toolCallObject[type]?.arguments;
                 toolCalls.push(
                     ToolCall.builder()
-                        .setName(name)
-                        .setType(type)
-                        .setParameters(parameterObject)
-                        .setSequence(sequence)
+                        .name(name)
+                        .type(type)
+                        .parameters(parameterObject)
+                        .sequence(sequence)
                         .build()
                 );
             }
         }
 
         return new ModelResponseBuilder()
-            .withToolCalls(toolCalls)
-            .withRole(message['message']['role'])
-            .withContent(message['message']['content'])
-            .withThinking(message['message']['thinking'])
+            .toolCalls(toolCalls)
+            .role(message['message']['role'])
+            .content(message['message']['content'])
+            .thinking(message['message']['thinking'])
             .build();
     }
 

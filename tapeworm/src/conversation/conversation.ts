@@ -51,40 +51,40 @@ export class Message {
 }
 
 export class MessageBuilder {
-    role!: string;
-    content?: any;
-    toolCalls? : ToolCall[];
-    toolName? : string;
-    thinking? : string;
+    private _role!: string;
+    private _content?: any;
+    private _toolCalls? : ToolCall[];
+    private _toolName? : string;
+    private _thinking? : string;
 
-    setRole(role: string) : MessageBuilder {
-        this.role = role;
+    role(role: string) : MessageBuilder {
+        this._role = role;
         return this;
     }
 
-    setContent(content: any) : MessageBuilder {
-        this.content = content;
+    content(content: any) : MessageBuilder {
+        this._content = content;
         return this;
     }
 
-    setToolCalls(toolCalls: ToolCall[]) : MessageBuilder {
-        this.toolCalls = toolCalls;
+    toolCalls(toolCalls: ToolCall[]) : MessageBuilder {
+        this._toolCalls = toolCalls;
         return this;
     }
 
-    setToolName(toolName: any) : MessageBuilder {
-        this.toolName = toolName;
+    toolName(toolName: any) : MessageBuilder {
+        this._toolName = toolName;
         return this;
     }
 
-    setThinking(thinking: string | undefined) : MessageBuilder {
-        this.thinking = thinking;
+    thinking(thinking: string | undefined) : MessageBuilder {
+        this._thinking = thinking;
         return this;
     }
 
 
     build() {
-        return new Message(this.role, this.content, this.toolCalls, this.toolName, this.thinking);
+        return new Message(this._role, this._content, this._toolCalls, this._toolName, this._thinking);
     }
 
 }

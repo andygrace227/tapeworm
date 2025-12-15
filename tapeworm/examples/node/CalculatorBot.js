@@ -22,21 +22,24 @@ class AdditionTool extends Tool {
         return ToolSchema.builder()
             .addParameter(
                 Parameter.builder()
-                .setName("a")
-                .setDescription("The first number to add.")
-                .setRequired(true)
-                .setType("number")
+                .name("a")
+                .description("The first number to add.")
+                .required(true)
+                .type("number")
+                .build()
             )
             .addParameter(
                 Parameter.builder()
-                .setName("b")
-                .setDescription("The second number to add.")
-                .setRequired(true)
-                .setType("number")
+                .name("b")
+                .description("The second number to add.")
+                .required(true)
+                .type("number")
+                .build()
             )
-            .setOutput(
+            .output(
                 "A number that is equal to a + b"
-            );
+            )
+            .build();
     }
 
     execute(input) {
@@ -64,4 +67,3 @@ agent.system_prompt = "You are an agent that runs math operations."
 agent.model = ollama;
 
 await agent.invoke("What is 9 + 10");
-
