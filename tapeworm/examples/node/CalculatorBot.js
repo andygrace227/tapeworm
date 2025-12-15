@@ -7,6 +7,8 @@ import {Agent, OllamaModel, Parameter, Tool, ToolSchema} from '../../dist/tapewo
 
 /**
  * Tool that uses finite difference methods to evaluate the rate of change of a function.
+ * 
+ * Nah, just kidding. It adds two numbers!
  */
 class AdditionTool extends Tool {
 
