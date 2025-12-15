@@ -23,6 +23,6 @@
     "vite": "^7.2.7"
   },
   "dependencies": {
-    "@atgs/tapeworm": "^0.0.1"
+    "@atgs/tapeworm": "^0.0.2"
   }
 }

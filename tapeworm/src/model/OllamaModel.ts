@@ -1,5 +1,4 @@
 import ToolCall from "../tool/toolCall";
-import type { Parameter } from "../tool/toolschema";
 import { Model, ModelRequest, ModelResponse, ModelResponseBuilder } from "./model";
 
 
