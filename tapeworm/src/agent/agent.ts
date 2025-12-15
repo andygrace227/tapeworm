@@ -13,7 +13,6 @@ export default class Agent {
     conversationManager? : ConversationManager;
     toolNameToIndexMap : any | undefined;
 
-
     async invoke(query : string) {
         if (this.conversation == undefined) {
             this.conversation = new Conversation();
@@ -66,10 +65,7 @@ export default class Agent {
                     this._runTool(response.toolCalls[toolCall]);
                 }
             }
-
-
         }
-
     }
 
     async _runQuery() : Promise<ModelResponse> {
@@ -80,7 +76,6 @@ export default class Agent {
                 .tools(this.tools)
                 .build()
         );
-
     }
 
     async _runTool(toolCall : ToolCall) : Promise<any> {
@@ -90,6 +85,14 @@ export default class Agent {
         
         if (toolCall.name in this.toolNameToIndexMap == false) {
             // Error - this tool call does not exist in this agent.
+            this.conversation.append(
+                Message.builder()
+                        .role("tool")
+                        .toolName(toolCall.name)
+                        .content(JSON.stringify({"error": "tool does not exist"}))
+                        .build()
+            );
+            return;
         }
 
         let tool = this.tools[this.toolNameToIndexMap[toolCall.name]];

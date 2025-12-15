@@ -1,3 +1,7 @@
+
+
+![Tapeworm Logo](./tapeworm.svg)
+
 # Tapeworm
 
 Tapeworm is an in-browser and node agent framework.

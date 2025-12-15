@@ -1,17 +1,16 @@
 {
-  "name": "@atgs/tapeworm",
+  "name": "@atgs/tapeworm_huggingface",
   "version": "0.0.1",
   "type": "module",
-  "main": "dist/tapeworm.cjs.js",
-  "module": "dist/tapeworm.es.js",
-  "browser": "dist/tapeworm.umd.js",
+  "main": "dist/tapeworm_huggingface.cjs.js",
+  "module": "dist/tapeworm_huggingface.es.js",
+  "browser": "dist/tapeworm_huggingface.umd.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "vite build && npm run build:types",
-    "build:types": "tsc -p tsconfig.types.json",
+    "build": "vite build",
     "test": "jest"
   },
   "devDependencies": {
@@ -22,5 +21,8 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "vite": "^7.2.7"
+  },
+  "dependencies": {
+    "@atgs/tapeworm": "^0.0.1"
   }
 }
