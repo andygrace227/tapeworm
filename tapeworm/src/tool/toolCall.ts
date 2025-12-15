@@ -7,10 +7,10 @@
 export default class ToolCall {
     sequence: number | undefined;
     name: string;
-    parameters: Map<string, any>;
+    parameters: any;
     type: string;
 
-    constructor(sequence: number | undefined, name: string, parameters: Map<string,any>, type: string) {
+    constructor(sequence: number | undefined, name: string, parameters: any, type: string) {
         this.sequence = sequence;
         this.name = name;
         this.parameters = parameters;
@@ -29,7 +29,7 @@ export default class ToolCall {
 export class ToolCallBuilder {
     sequence!: number | undefined;
     name!: string;
-    parameters!: Map<string, any>;
+    parameters!: any;
     type!: string;
 
     setSequence(sequence: number | undefined) : ToolCallBuilder {
@@ -42,7 +42,7 @@ export class ToolCallBuilder {
         return this;
     }
 
-    setParameters(parameters: Map<string, any>) : ToolCallBuilder{
+    setParameters(parameters: any) : ToolCallBuilder{
         this.parameters = parameters;
         return this;
     }

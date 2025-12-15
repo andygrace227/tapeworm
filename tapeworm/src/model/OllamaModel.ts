@@ -3,8 +3,7 @@ import type { Parameter } from "../tool/toolschema";
 import { Model, ModelRequest, ModelResponse, ModelResponseBuilder } from "./model";
 
 
-
-export class OllamaModel extends Model {
+export default class OllamaModel extends Model {
     endpoint: string;
     model : string;
     options? : any;
@@ -31,7 +30,7 @@ export class OllamaModel extends Model {
             model: this.model,
             messages: this._formatMessages(request),
             tools: this._formatTools(request),
-            options: this.options
+            ...this.options
         }
 
         let response = await fetch(
@@ -56,21 +55,17 @@ export class OllamaModel extends Model {
         if (message['message']['tool_calls']) {
             for (let toolCallKey in message['message']['tool_calls']){
                 const toolCallObject = message['message']['tool_calls'][toolCallKey];
-                let type : string = Object.keys(toolCallObject)[0];
+
+                // TODO: Support more types besides function.
+                let type : string = "function";
                 let name : string = toolCallObject[type]?.name;
                 let sequence : number | undefined = toolCallObject[type]?.index;
                 let parameterObject : any = toolCallObject[type]?.arguments;
-
-                let parameters : Map<string, any> = new Map();
-                for (let param in parameterObject) {
-                    parameters.set(param, parameterObject[param]);
-
-                }
                 toolCalls.push(
                     ToolCall.builder()
                         .setName(name)
                         .setType(type)
-                        .setParameters(parameters)
+                        .setParameters(parameterObject)
                         .setSequence(sequence)
                         .build()
                 );
@@ -81,6 +76,7 @@ export class OllamaModel extends Model {
             .withToolCalls(toolCalls)
             .withRole(message['message']['role'])
             .withContent(message['message']['content'])
+            .withThinking(message['message']['thinking'])
             .build();
     }
 

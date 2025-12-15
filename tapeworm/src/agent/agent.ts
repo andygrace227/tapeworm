@@ -46,8 +46,12 @@ export default class Agent {
                 Message.builder()
                     .setRole(response.role ?? 'assistant')
                     .setContent(response.content ?? '')
+                    .setThinking(response.thinking ?? '')
                     .build()
             );
+
+            console.log("Assistant thinking: " + response.thinking);
+            console.log("Assistant reply: " + response.content);
 
             doneWithCalls = true;
 
@@ -80,6 +84,8 @@ export default class Agent {
     }
 
     async _runTool(toolCall : ToolCall) : Promise<any> {
+        console.log("Calling tool: " + JSON.stringify(toolCall));
+
         this.generateToolNameToIndexMap();
         
         if (toolCall.name in this.toolNameToIndexMap == false) {

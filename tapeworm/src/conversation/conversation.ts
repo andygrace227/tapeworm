@@ -22,12 +22,14 @@ export class Message {
     content?: any;
     toolCalls? : ToolCall[];
     toolName? : string;
+    thinking? : string;
 
-    constructor(role: string, content: any, toolCalls: any[] | undefined, toolName: string | undefined) {
+    constructor(role: string, content: any, toolCalls: any[] | undefined, toolName: string | undefined, thinking: string | undefined) {
         this.role = role;
         this.content = content;
         this.toolCalls = toolCalls;
         this.toolName = toolName;
+        this.thinking = thinking;
     }
 
     setRole(role: string) {
@@ -53,6 +55,7 @@ export class MessageBuilder {
     content?: any;
     toolCalls? : ToolCall[];
     toolName? : string;
+    thinking? : string;
 
     setRole(role: string) : MessageBuilder {
         this.role = role;
@@ -74,9 +77,14 @@ export class MessageBuilder {
         return this;
     }
 
+    setThinking(thinking: string | undefined) : MessageBuilder {
+        this.thinking = thinking;
+        return this;
+    }
+
 
     build() {
-        return new Message(this.role, this.content, this.toolCalls, this.toolName);
+        return new Message(this.role, this.content, this.toolCalls, this.toolName, this.thinking);
     }
 
 }

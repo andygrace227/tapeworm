@@ -17,6 +17,14 @@ export default class ToolSchema {
         this.output = output;
     }
 
+    /**
+     * Return a tool schema builder, so you can properly construct tools instead of dealing with the constructor
+     * @returns a tool schema builder.
+     */
+    static builder() {
+        return new ToolSchemaBuilder();
+    }
+
 }
 
 /**
@@ -92,6 +100,11 @@ export class Parameter {
      */
     assertValidType() {
         
+    }
+
+
+    static builder() {
+        return new ParameterBuilder();
     }
 
 }

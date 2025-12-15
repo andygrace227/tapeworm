@@ -78,6 +78,7 @@ export class ModelResponse {
     toolCalls?: ToolCall[];
     role?: string;
     content?: string;
+    thinking? : string;
 
     /**
      * Wrap a model response.
@@ -85,10 +86,11 @@ export class ModelResponse {
      * @param role Role of the message (e.g., assistant, tool).
      * @param content Text content returned by the model.
      */
-    constructor(toolCalls: ToolCall[], role: string | undefined, content: string | undefined) {
+    constructor(toolCalls: ToolCall[], role: string | undefined, content: string | undefined, thinking: string | undefined) {
         this.toolCalls = toolCalls;
         this.role = role;
         this.content = content;
+        this.thinking = thinking;
     }
 
     static builder() : ModelResponseBuilder {
@@ -100,6 +102,7 @@ export class ModelResponseBuilder {
     toolCalls!: ToolCall[];
     role?: string;
     content?: string;
+    thinking? : string;
 
     /**
      * Attach tool calls to the response.
@@ -125,11 +128,20 @@ export class ModelResponseBuilder {
         return this;
     }
 
+    
+    /**
+     * Set the thinking content for the response message.
+     */
+    withThinking(thinking: string) : ModelResponseBuilder {
+        this.thinking = thinking;
+        return this;
+    }
+
     /**
      * Build the ModelResponse from the collected fields.
      */
     build() : ModelResponse {
-        return new ModelResponse(this.toolCalls, this.role, this.content);
+        return new ModelResponse(this.toolCalls, this.role, this.content, this.thinking);
     }
 }
 
