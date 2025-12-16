@@ -1,4 +1,5 @@
-import Conversation, { ConversationManager, Message } from "../conversation/conversation";
+import Conversation, { ConversationManager } from "../conversation/conversation";
+import Message from "../conversation/message";
 import { ModelRequestBuilder, ModelResponse, type Model } from "../model/model";
 import type Tool from "../tool/tool";
 import type ToolCall from "../tool/toolCall";

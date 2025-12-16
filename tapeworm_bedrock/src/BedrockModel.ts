@@ -1,4 +1,4 @@
-import { Model, ModelRequest, ModelResponse, ModelResponseBuilder } from '@atgs/tapeworm';
+import { Message, Model, ModelRequest, ModelResponse, ModelResponseBuilder } from '@atgs/tapeworm';
 import { BedrockRuntimeClient,
   ConversationRole,
   ConverseCommand } from '@aws-sdk/client-bedrock-runtime';
@@ -24,14 +24,13 @@ export default class BedrockModel extends Model {
      */
     async invoke(request: ModelRequest) : Promise<ModelResponse> {
 
-
-
-        let requestObject = {
+        let requestObject = new ConverseCommand({
             modelId: this.modelId,
             messages: this._formatMessages(request),
+            system: this._findSystemPrompt(request),
+            toolConfig: this._formatTools(request),
             inferenceConfig: this.inferenceConfig,
-            toolConfig: this._formatTools(request)
-        }
+        })
 
         try {
             const response = await this.bedrockClient.send(new ConverseCommand(requestObject));
@@ -52,6 +51,76 @@ export default class BedrockModel extends Model {
 
       
 
+    }
+
+    _formatMessages(request: ModelRequest) : any {
+        let messagesArr = [];
+        
+        for (let message of request.messages) {
+             if (message.role == "assistant" || message.role == "system" || message.role == "user") {
+                let messageObject : any = {
+                    role: message.role,
+                    content: []
+                };
+
+                if (message.content != undefined) {
+                    messageObject.content.push( {text: message.content});
+                }
+
+                if (message.toolCalls != undefined) {
+                    messageObject.content.push(this._handleToolCalls(message));
+                }
+
+
+                messagesArr.push(
+                    {
+                        role: message.role,
+                        content: [
+                            {text: message.content} 
+                        ]
+                    }
+                );
+            
+
+                continue;
+            }
+
+            
+
+
+
+
+
+        }
+
+    }
+
+    _findSystemPrompt(request: ModelRequest) : any {
+
+
+    }
+
+    _handleToolCalls(message: Message) : any {
+        let toolCallBlocks = []
+
+        for (let toolCall of message.toolCalls ?? []) {
+            toolCallBlocks.push(
+                {
+                    name: message.toolCalls,
+                    input: input
+                }
+            )
+
+        }
+
+
+
+
+        return {
+            name: message.toolCalls,
+            input: 
+        }
+        
     }
 
     //https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/javascript_bedrock-runtime_code_examples.html

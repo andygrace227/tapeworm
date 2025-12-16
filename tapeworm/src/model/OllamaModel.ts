@@ -49,6 +49,8 @@ export default class OllamaModel extends Model {
 
         let message = await response.json();
 
+        console.log(JSON.stringify(message, null, 2));
+
         let toolCalls : ToolCall[] = [];
 
         if (message['message']['tool_calls']) {

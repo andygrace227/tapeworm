@@ -1,4 +1,4 @@
-import type { Message } from "../conversation/conversation";
+import type Message from "../conversation/message";
 import type Tool from "../tool/tool";
 import type ToolCall from "../tool/toolCall";
 

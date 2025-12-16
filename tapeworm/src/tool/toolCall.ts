@@ -9,12 +9,14 @@ export default class ToolCall {
     name: string;
     parameters: any;
     type: string;
+    id: string;
 
-    constructor(sequence: number | undefined, name: string, parameters: any, type: string) {
+    constructor(sequence: number | undefined, name: string, parameters: any, type: string, id: string) {
         this.sequence = sequence;
         this.name = name;
         this.parameters = parameters;
         this.type = type;
+        this.id = id;
     }
 
     static builder() : ToolCallBuilder {
@@ -31,6 +33,7 @@ export class ToolCallBuilder {
     private _name!: string;
     private _parameters!: any;
     private _type!: string;
+    private _id!: string;
 
     sequence(sequence: number | undefined) : ToolCallBuilder {
         this._sequence = sequence;
@@ -42,13 +45,18 @@ export class ToolCallBuilder {
         return this;
     }
 
-    parameters(parameters: any) : ToolCallBuilder{
+    parameters(parameters: any) : ToolCallBuilder {
         this._parameters = parameters;
         return this;
     }
 
-    type(type: string) : ToolCallBuilder{
+    type(type: string) : ToolCallBuilder {
         this._type = type;
+        return this;
+    }
+
+    id(id: string) : ToolCallBuilder {
+        this._id = id;
         return this;
     }
 
@@ -56,8 +64,11 @@ export class ToolCallBuilder {
         if (this._sequence == undefined) {
             this._sequence = 0;
         }
-        return new ToolCall(this._sequence, this._name, this._parameters, this._type);
+        return new ToolCall(this._sequence, this._name, this._parameters, this._type, this._id);
     }
 
 
 }
+
+
+// TODO: Add a tool result type.

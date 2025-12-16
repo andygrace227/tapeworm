@@ -1,3 +1,4 @@
+import type { Message } from "..";
 import type { Model } from "../model/model";
 import type ToolCall from "../tool/toolCall";
 
@@ -16,78 +17,6 @@ export default class Conversation {
     }
 }
 
-
-export class Message {
-    role!: string;
-    content?: any;
-    toolCalls? : ToolCall[];
-    toolName? : string;
-    thinking? : string;
-
-    constructor(role: string, content: any, toolCalls: any[] | undefined, toolName: string | undefined, thinking: string | undefined) {
-        this.role = role;
-        this.content = content;
-        this.toolCalls = toolCalls;
-        this.toolName = toolName;
-        this.thinking = thinking;
-    }
-
-    setRole(role: string) {
-        this.role = role;
-    }
-
-    setContent(content: any) {
-        this.content = content;
-    }
-
-    setToolCalls(toolCalls: any) {
-        this.toolCalls = toolCalls;
-    }
-
-    static builder() {
-        return new MessageBuilder();
-    }
-
-}
-
-export class MessageBuilder {
-    private _role!: string;
-    private _content?: any;
-    private _toolCalls? : ToolCall[];
-    private _toolName? : string;
-    private _thinking? : string;
-
-    role(role: string) : MessageBuilder {
-        this._role = role;
-        return this;
-    }
-
-    content(content: any) : MessageBuilder {
-        this._content = content;
-        return this;
-    }
-
-    toolCalls(toolCalls: ToolCall[]) : MessageBuilder {
-        this._toolCalls = toolCalls;
-        return this;
-    }
-
-    toolName(toolName: any) : MessageBuilder {
-        this._toolName = toolName;
-        return this;
-    }
-
-    thinking(thinking: string | undefined) : MessageBuilder {
-        this._thinking = thinking;
-        return this;
-    }
-
-
-    build() {
-        return new Message(this._role, this._content, this._toolCalls, this._toolName, this._thinking);
-    }
-
-}
 
 export class ConversationManager {
 
