@@ -1,17 +1,29 @@
+import { MessageComponent, MessageComponentType } from "../conversation/message";
 
 
 /**
  * Represents a single tool invocation returned by a model, including the target
  * tool name, argument map, type (function/spec), and optional sequence number.
+ * 
+ * The ToolCall object is also a MessageComponent and thus is a component of Message.
  */
-export default class ToolCall {
+export default class ToolCall extends MessageComponent {
     sequence: number | undefined;
     name: string;
     parameters: any;
     type: string;
     id: string;
 
+    /**
+     * Get the type of this message component, as defined in MessageComponentType.
+     * This returns MessageComponentType.ToolCall.
+     */
+    getMessageComponentType(): MessageComponentType {
+        return MessageComponentType.ToolCall;
+    }
+    
     constructor(sequence: number | undefined, name: string, parameters: any, type: string, id: string) {
+        super();
         this.sequence = sequence;
         this.name = name;
         this.parameters = parameters;
@@ -70,5 +82,9 @@ export class ToolCallBuilder {
 
 }
 
-
-// TODO: Add a tool result type.
+export class ToolNotFoundError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = 'ToolNotFoundError';
+    }
+}

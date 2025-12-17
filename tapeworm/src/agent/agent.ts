@@ -1,8 +1,9 @@
 import Conversation, { ConversationManager } from "../conversation/conversation";
-import Message from "../conversation/message";
+import Message, { ToolResult } from "../conversation/message";
 import { ModelRequestBuilder, ModelResponse, type Model } from "../model/model";
 import type Tool from "../tool/tool";
 import type ToolCall from "../tool/toolCall";
+import { ToolNotFoundError } from "../tool/toolCall";
 
 
 export default class Agent {
@@ -42,13 +43,14 @@ export default class Agent {
 
             let response = await this._runQuery();
 
-            this.conversation.append(
-                Message.builder()
+            let messageBuilder =  Message.builder()
                     .role(response.role ?? 'assistant')
-                    .content(response.content ?? '')
-                    .thinking(response.thinking ?? '')
-                    .build()
-            );
+                    .content(response.content)
+                    .thinking(response.thinking);
+
+            response.toolCalls?.forEach( toolCall => messageBuilder = messageBuilder.toolCall(toolCall));
+
+            this.conversation.append(messageBuilder.build());
 
             console.log("Assistant thinking: " + response.thinking);
             console.log("Assistant reply: " + response.content);
@@ -89,8 +91,7 @@ export default class Agent {
             this.conversation.append(
                 Message.builder()
                         .role("tool")
-                        .toolName(toolCall.name)
-                        .content(JSON.stringify({"error": "tool does not exist"}))
+                        .toolResult(ToolResult.of(toolCall.id, new ToolNotFoundError("Agent does not have a tool with this name.")))
                         .build()
             );
             return;
@@ -103,8 +104,7 @@ export default class Agent {
             this.conversation.append(
                 Message.builder()
                     .role("tool")
-                    .toolName(toolCall.name)
-                    .content(JSON.stringify(result))
+                    .toolResult(ToolResult.of(toolCall.id, result))
                     .build()
             )
             // Result was good. Save it
@@ -113,8 +113,7 @@ export default class Agent {
             this.conversation.append(
                 Message.builder()
                     .role("tool")
-                    .toolName(toolCall.name)
-                    .content(JSON.stringify(error))
+                    .toolResult(ToolResult.of(toolCall.id, JSON.stringify(error)))
                     .build()
             )
         }

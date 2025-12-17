@@ -8,17 +8,11 @@ import type ToolCall from "../tool/toolCall";
  */ 
 export default class Message {
     role!: string;
-    content?: any;
-    toolCalls? : ToolCall[];
-    toolName? : string;
-    thinking? : string;
+    content!: MessageComponent[];
 
-    constructor(role: string, content: any, toolCalls: any[] | undefined, toolName: string | undefined, thinking: string | undefined) {
+    constructor(role: string, content: MessageComponent[]) {
         this.role = role;
         this.content = content;
-        this.toolCalls = toolCalls;
-        this.toolName = toolName;
-        this.thinking = thinking;
     }
 
     static builder() {
@@ -35,38 +29,57 @@ export default class Message {
  */
 export class MessageBuilder {
     private _role!: string;
-    private _content?: any;
-    private _toolCalls? : ToolCall[];
-    private _toolName? : string;
-    private _thinking? : string;
+    private _content!: MessageComponent[];
 
     role(role: string) : MessageBuilder {
         this._role = role;
         return this;
     }
 
-    content(content: any) : MessageBuilder {
-        this._content = content;
+    init() : void {
+        if (this._content == undefined) {
+            this._content = [];
+        }
+    }
+
+    toolCall(toolCall: ToolCall | undefined) : MessageBuilder {
+        if (toolCall == undefined) {
+            return this;
+        }
+        this.init();
+        this._content.push(toolCall);
         return this;
     }
 
-    toolCalls(toolCalls: ToolCall[]) : MessageBuilder {
-        this._toolCalls = toolCalls;
-        return this;
-    }
-
-    toolName(toolName: any) : MessageBuilder {
-        this._toolName = toolName;
+    toolResult(toolResult: ToolResult | undefined) : MessageBuilder {
+        if (toolResult == undefined) {
+            return this;
+        }
+        this.init();
+        this._content.push(toolResult);
         return this;
     }
 
     thinking(thinking: string | undefined) : MessageBuilder {
-        this._thinking = thinking;
+        if (thinking == undefined) {
+            return this;
+        }
+        this.init();
+        this._content.push(Thinking.of(thinking));
+        return this;
+    }
+
+    content(content: string | undefined) : MessageBuilder {
+        if (content == undefined) {
+            return this;
+        }
+        this.init();
+        this._content.push(Content.of(content));
         return this;
     }
 
     build() {
-        return new Message(this._role, this._content, this._toolCalls, this._toolName, this._thinking);
+        return new Message(this._role, this._content);
     }
 
 }
@@ -179,57 +192,20 @@ export class Thinking extends MessageComponent {
 }
 
 /**
- * A ToolCall message block (which wraps a tool call), representing an invocation from an LLM
- * It contains and encodes the LLM's intent to call a tool.
- */
-export class ToolCallWrapper extends MessageComponent {
-    toolCall!: ToolCall;
-
-    constructor(toolCall: ToolCall) {
-        super();
-        this.toolCall = toolCall;
-    }
-
-    /**
-     * Get the type of this message component, as defined in MessageComponentType.
-     * This returns MessageComponentType.ToolCall.
-     */
-    getMessageComponentType(): MessageComponentType {
-        return MessageComponentType.ToolCall;
-    }
-
-    /**
-     * Get the tool call wrapped in this wrapper
-     * @returns the tool call contained in this component.
-     */
-    get() : ToolCall {
-        return this.toolCall;
-    }
-
-    /**
-     * Shorthand for the constructor
-     * @param toolCall - the tool call this content block represents.
-     * @returns a new ToolCallWrapper with the text.
-     */
-    static of(toolCall: ToolCall) : ToolCallWrapper{
-        return new this(toolCall);
-    }
-}
-
-
-//TODO: Finish this.
-
-/**
  * A Thinking message block, representing a thought from the LLM.
  * It contains only a single thought, much like my brain as I'm writing this.
  * It must override the getMessageComponentType function.
  */
-export class ToolResultWrapper extends MessageComponent {
-    thought!: string;
+export class ToolResult extends MessageComponent {
+    id: string;
+    toolName: string;
+    toolResult!: any;
 
-    constructor(thought: string) {
+    constructor(id: string, toolName: string, toolResult: any) {
         super();
-        this.thought = thought;
+        this.id = id;
+        this.toolName = toolName;
+        this.toolResult = toolResult;
     }
 
     /**
@@ -241,19 +217,11 @@ export class ToolResultWrapper extends MessageComponent {
     }
 
     /**
-     * Get the content of this MessageComponent.
-     * @returns the string contained in this component.
-     */
-    get() : string {
-        return this.thought;
-    }
-
-    /**
      * Shorthand for the constructor
      * @param thought - the text this content block represents.
      * @returns a new Content messagecomponent with the text.
      */
-    static of(thought: string) : Thinking{
-        return new this(thought);
+    static of(toolCall: ToolCall, toolResult: any) : ToolResult {
+        return new this(toolCall.id, toolCall.name, toolResult);
     }
 }

@@ -55,9 +55,9 @@ export default class BedrockModel extends Model {
 
     _formatMessages(request: ModelRequest) : any {
         let messagesArr = [];
-        
+        //Bedrock's tool uses are considered "user" role.
         for (let message of request.messages) {
-             if (message.role == "assistant" || message.role == "system" || message.role == "user") {
+             if (message.role == "assistant" || message.role == "user") {
                 let messageObject : any = {
                     role: message.role,
                     content: []

@@ -1,3 +1,5 @@
+import type { Message } from "..";
+import { MessageComponentType } from "../conversation/message";
 import ToolCall from "../tool/toolCall";
 import { Model, ModelRequest, ModelResponse, ModelResponseBuilder } from "./model";
 
@@ -133,6 +135,9 @@ export default class OllamaModel extends Model {
             }
 
             if (message.role == "tool") {
+
+
+                
                 messageObject.push(
                     {
                         role: "tool",
@@ -145,4 +150,61 @@ export default class OllamaModel extends Model {
         return messageObject;
     }
 
+    /**
+     * 
+     */
+    _formatSingleMessage(message: Message) : any {
+        let messageObject : any = {
+            role: message.role
+        };
+
+        let content = undefined;
+        let toolCalls = undefined;
+        let thinking = undefined;
+
+        for (const component of message.content) {
+            if (component.getMessageComponentType() == MessageComponentType.Content) {
+                if (content == undefined) {
+                    content = ""
+                }
+                content += component.get();
+            }
+
+            if (component.getMessageComponentType() == MessageComponentType.Thinking) {
+                if (thinking == undefined) {
+                    thinking = ""
+                }
+                thinking += component.get();
+            }
+
+            if (component.getMessageComponentType() == MessageComponentType.ToolCall) {
+                if (toolCalls == undefined) {
+                    toolCalls = []
+                }
+                toolCalls.push(this._formatToolCall(component))
+            }
+        }
+
+        if (content != undefined) {
+            messageObject["content"] = content;
+        }
+        
+        if (toolCalls != undefined) {
+            messageObject["tool_calls"] = toolCalls;
+        }
+        if (thinking != undefined) {
+            messageObject["thinking"] = thinking;
+        }
+
+        return messageObject;
+    }
+
+    _formatToolCall(toolCall: ToolCall) : any {
+        return {
+            function : {
+                name: toolCall.name,
+                arguments: toolCall.parameters
+            }
+        }
+    }
 }
