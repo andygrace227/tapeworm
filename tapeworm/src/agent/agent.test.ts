@@ -1,8 +1,9 @@
 import Agent from './agent';
 import { Model, ModelResponse } from '../model/model';
 import Tool from '../tool/tool';
-import { ToolCallBuilder } from '../tool/toolCall';
+import ToolCall, { ToolCallBuilder } from '../tool/toolCall';
 import ToolSchema from '../tool/toolschema';
+import { ToolResult } from '../conversation/message';
 
 class FakeModel extends Model {
     requests: any[] = [];
@@ -57,7 +58,10 @@ const buildAgent = (responses: any[], tools: Tool[] = []) => {
 describe('Agent.invoke', () => {
     it('initializes the conversation and forwards messages to the model', async () => {
         const modelResponses = [
-            ModelResponse.builder().role('assistant').content('hi there').build(),
+            {
+                role: "assistant",
+                content: "hi there"
+            }
         ];
         const agent = buildAgent(modelResponses);
 
@@ -69,8 +73,9 @@ describe('Agent.invoke', () => {
             'assistant',
         ]);
         const lastRequest = (agent.model as FakeModel).requests[0];
-        expect(lastRequest.messages[0].content).toBe('testSystemPrompt');
-        expect(lastRequest.messages[1].content).toBe('hello');
+
+        expect(lastRequest.messages[0].content[0].text).toBe('testSystemPrompt');
+        expect(lastRequest.messages[1].content[0].text).toBe('hello');
         expect(lastRequest.tools).toEqual([]);
     });
 
@@ -96,9 +101,11 @@ describe('Agent.invoke', () => {
 
         await agent.invoke('run tool');
 
+        console.log(agent.conversation.messages)
+
         const toolMessage = agent.conversation.messages.find((m: any) => m.role === 'tool');
-        expect(toolMessage?.toolName).toBe('echo');
-        expect(toolMessage?.content).toBe(JSON.stringify({ received: 'ping' }));
+        expect((toolMessage?.content[0] as ToolResult).toolName).toBe('echo');
+        expect((toolMessage?.content[0] as ToolResult).toolResult).toEqual({ received: 'ping' });
         expect(tool.executions[0]).toBeInstanceOf(Map);
         expect(agent.conversation.messages.map((m: any) => m.role)).toEqual([
             'system',

@@ -45,8 +45,9 @@ class AdditionTool extends Tool {
     }
 
     execute(input) {
-        let a = input.a;
-        let b = input.b;
+        let a = +input.a;
+        let b = +input.b;
+        console.log("Adding " + a + " and " + b + ": " + (a+b));
         return a + b;
     }
 

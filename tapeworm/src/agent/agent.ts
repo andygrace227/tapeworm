@@ -91,7 +91,7 @@ export default class Agent {
             this.conversation.append(
                 Message.builder()
                         .role("tool")
-                        .toolResult(ToolResult.of(toolCall.id, new ToolNotFoundError("Agent does not have a tool with this name.")))
+                        .toolResult(ToolResult.of(toolCall, new ToolNotFoundError("Agent does not have a tool with this name.")))
                         .build()
             );
             return;
@@ -104,7 +104,7 @@ export default class Agent {
             this.conversation.append(
                 Message.builder()
                     .role("tool")
-                    .toolResult(ToolResult.of(toolCall.id, result))
+                    .toolResult(ToolResult.of(toolCall, result))
                     .build()
             )
             // Result was good. Save it
@@ -113,7 +113,7 @@ export default class Agent {
             this.conversation.append(
                 Message.builder()
                     .role("tool")
-                    .toolResult(ToolResult.of(toolCall.id, JSON.stringify(error)))
+                    .toolResult(ToolResult.of(toolCall, JSON.stringify(error)))
                     .build()
             )
         }

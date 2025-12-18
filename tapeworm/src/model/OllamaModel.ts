@@ -1,5 +1,5 @@
-import type { Message } from "..";
-import { MessageComponentType } from "../conversation/message";
+import { Tool, type Message } from "..";
+import { Content, MessageComponentType, Thinking, ToolResult } from "../conversation/message";
 import ToolCall from "../tool/toolCall";
 import { Model, ModelRequest, ModelResponse, ModelResponseBuilder } from "./model";
 
@@ -34,6 +34,7 @@ export default class OllamaModel extends Model {
             ...this.options
         }
 
+
         let response = await fetch(
         this.endpoint + "/api/chat",
             {
@@ -50,8 +51,6 @@ export default class OllamaModel extends Model {
         }
 
         let message = await response.json();
-
-        console.log(JSON.stringify(message, null, 2));
 
         let toolCalls : ToolCall[] = [];
 
@@ -130,28 +129,30 @@ export default class OllamaModel extends Model {
 
         for (let message of request.messages) {
             if (message.role == "assistant" || message.role == "system" || message.role == "user") {
-                messageObject.push(message);
+                messageObject.push(this._formatSingleMessage(message));
                 continue;
             }
 
             if (message.role == "tool") {
-
-
-                
-                messageObject.push(
-                    {
-                        role: "tool",
-                        content: message.content,
-                        tool_name: message.toolName
+                for (const component of message.content) {
+                    if (component.getMessageComponentType() == MessageComponentType.ToolResult) {
+                        const toolResultComponent : ToolResult = component as ToolResult;
+                        messageObject.push(
+                            {
+                                role: message.role,
+                                name: toolResultComponent.toolName,
+                                content: JSON.stringify(toolResultComponent.toolResult)
+                            }
+                        )
                     }
-                )
+                }
             }
         }
         return messageObject;
     }
 
     /**
-     * 
+     * Format everything sent by a user or LLM (no tools)
      */
     _formatSingleMessage(message: Message) : any {
         let messageObject : any = {
@@ -164,24 +165,27 @@ export default class OllamaModel extends Model {
 
         for (const component of message.content) {
             if (component.getMessageComponentType() == MessageComponentType.Content) {
+                const contentComponent = component as Content;
                 if (content == undefined) {
                     content = ""
                 }
-                content += component.get();
+                content += contentComponent.get();
             }
 
             if (component.getMessageComponentType() == MessageComponentType.Thinking) {
+                const thinkingComponent = component as Thinking;
                 if (thinking == undefined) {
                     thinking = ""
                 }
-                thinking += component.get();
+                thinking += thinkingComponent.get();
             }
 
             if (component.getMessageComponentType() == MessageComponentType.ToolCall) {
+                const toolCallComponent = component as ToolCall;
                 if (toolCalls == undefined) {
                     toolCalls = []
                 }
-                toolCalls.push(this._formatToolCall(component))
+                toolCalls.push(this._formatToolCall(toolCallComponent))
             }
         }
 
