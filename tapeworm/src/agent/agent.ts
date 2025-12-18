@@ -6,6 +6,9 @@ import type ToolCall from "../tool/toolCall";
 import { ToolNotFoundError } from "../tool/toolCall";
 
 
+/**
+ * Coordinates a model, its tools, and the running conversation to fulfill user queries.
+ */
 export default class Agent {
     name! : string;
     system_prompt? : string;
@@ -15,6 +18,11 @@ export default class Agent {
     conversationManager? : ConversationManager;
     toolNameToIndexMap : any | undefined;
 
+    /**
+     * Run the full agent loop for a user query: seed the conversation, invoke the model,
+     * and execute any returned tool calls until completion.
+     * @param query User-provided input to hand to the agent.
+     */
     async invoke(query : string) {
         if (this.conversation == undefined) {
             this.conversation = new Conversation();
@@ -71,6 +79,10 @@ export default class Agent {
         }
     }
 
+    /**
+     * Ask the backing model for the next response given the current conversation state.
+     * @returns Parsed model response including content, thinking, and tool calls.
+     */
     async _runQuery() : Promise<ModelResponse> {
 
         return await this.model.invoke(
@@ -81,6 +93,11 @@ export default class Agent {
         );
     }
 
+    /**
+     * Execute a single tool call and append the result (or error) back to the conversation.
+     * @param toolCall Tool invocation details returned by the model.
+     * @returns Tool execution output, if any.
+     */
     async _runTool(toolCall : ToolCall) : Promise<any> {
         console.log("Calling tool: " + JSON.stringify(toolCall));
 
@@ -119,6 +136,9 @@ export default class Agent {
         }
     }
 
+    /**
+     * Build a lookup from tool name to index for efficient resolution of tool calls.
+     */
     generateToolNameToIndexMap() {
         if (this.toolNameToIndexMap == undefined) {
             this.toolNameToIndexMap = {};

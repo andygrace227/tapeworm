@@ -37,6 +37,7 @@ export class ToolSchemaBuilder {
     /**
      * Add a parameter definition to the schema.
      * @param parameter Fully constructed parameter to append.
+     * @returns This builder for chaining.
      */
     addParameter(parameter: Parameter) : ToolSchemaBuilder {
         if (this._parameters == undefined) {
@@ -49,6 +50,7 @@ export class ToolSchemaBuilder {
     /**
      * Describe the output of the tool.
      * @param output Text description of what the tool returns.
+     * @returns This builder for chaining.
      */
     output(output : string) : ToolSchemaBuilder {
         this._output = output;
@@ -57,6 +59,7 @@ export class ToolSchemaBuilder {
 
     /**
      * Build the ToolSchema instance from the collected fields.
+     * @returns Constructed ToolSchema describing parameters and output.
      */
     build() : ToolSchema {
         if (this._parameters == undefined) {
@@ -106,12 +109,19 @@ export class Parameter {
     }
 
 
+    /**
+     * Create a builder for constructing a Parameter.
+     * @returns A ParameterBuilder instance.
+     */
     static builder() {
         return new ParameterBuilder();
     }
 
 }
 
+/**
+ * Builder for defining tool parameters step by step.
+ */
 export class ParameterBuilder {
     private _name! : string;
     private _description!: string;
@@ -120,6 +130,7 @@ export class ParameterBuilder {
 
     /**
      * Set the parameter name.
+     * @returns This builder for chaining.
      */
     name(name : string) : ParameterBuilder {
         this._name = name;
@@ -128,6 +139,7 @@ export class ParameterBuilder {
 
     /**
      * Set the parameter description.
+     * @returns This builder for chaining.
      */
     description(description : string) : ParameterBuilder {
         this._description = description;
@@ -136,6 +148,7 @@ export class ParameterBuilder {
 
     /**
      * Set the parameter type.
+     * @returns This builder for chaining.
      */
     type(type : string) : ParameterBuilder {
         this._type = type;
@@ -144,6 +157,7 @@ export class ParameterBuilder {
     
     /**
      * Mark the parameter as required or optional.
+     * @returns This builder for chaining.
      */
     required(required : boolean) : ParameterBuilder {
         this._required = required;
@@ -152,6 +166,7 @@ export class ParameterBuilder {
 
     /**
      * Build a Parameter instance using the accumulated fields.
+     * @returns Constructed Parameter definition.
      */
     build() : Parameter {
         if (this._required == undefined) {

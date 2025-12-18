@@ -23,6 +23,9 @@ export class Model {
     }
 }
 
+/**
+ * Container for the messages and tools required to invoke a model.
+ */
 export class ModelRequest {
     messages : Message[];
     tools: Tool[];
@@ -37,17 +40,25 @@ export class ModelRequest {
         this.tools = tools;
     }
 
+    /**
+     * Create a builder for composing a model request.
+     * @returns A ModelRequestBuilder instance.
+     */
     static builder() : ModelRequestBuilder {
         return new ModelRequestBuilder();
     }
 }
 
+/**
+ * Fluent builder for constructing ModelRequest instances.
+ */
 export class ModelRequestBuilder {
     private _messages!: Message[];
     private _tools!: Tool[];
 
     /**
      * Supply the conversation messages to include.
+     * @returns This builder for chaining.
      */
     messages(messages: Message[]) : ModelRequestBuilder {
         this._messages = messages;
@@ -56,6 +67,7 @@ export class ModelRequestBuilder {
 
     /**
      * Supply the tool list for this request.
+     * @returns This builder for chaining.
      */
     tools(tools: Tool[]) : ModelRequestBuilder {
         this._tools = tools;
@@ -64,6 +76,7 @@ export class ModelRequestBuilder {
 
     /**
      * Build the ModelRequest, defaulting tools to an empty array.
+     * @returns Constructed ModelRequest.
      */
     build() : ModelRequest {
         if (this._tools == undefined) {
@@ -74,6 +87,9 @@ export class ModelRequestBuilder {
 
 }
 
+/**
+ * Parsed model response including content, role, tool calls, and optional thinking.
+ */
 export class ModelResponse {
     toolCalls?: ToolCall[];
     role?: string;
@@ -93,11 +109,18 @@ export class ModelResponse {
         this.thinking = thinking;
     }
 
+    /**
+     * Create a builder for composing a model response.
+     * @returns A ModelResponseBuilder instance.
+     */
     static builder() : ModelResponseBuilder {
         return new ModelResponseBuilder();
     }
 }
 
+/**
+ * Fluent builder for constructing ModelResponse instances.
+ */
 export class ModelResponseBuilder {
     private _toolCalls!: ToolCall[];
     private _role?: string;
@@ -106,6 +129,7 @@ export class ModelResponseBuilder {
 
     /**
      * Attach tool calls to the response.
+     * @returns This builder for chaining.
      */
     toolCalls(toolCalls : ToolCall[]) : ModelResponseBuilder {
         this._toolCalls = toolCalls;
@@ -114,6 +138,7 @@ export class ModelResponseBuilder {
 
     /**
      * Set the role for the response message.
+     * @returns This builder for chaining.
      */
     role(role: string) : ModelResponseBuilder{
         this._role = role;
@@ -122,6 +147,7 @@ export class ModelResponseBuilder {
 
     /**
      * Set the textual content for the response message.
+     * @returns This builder for chaining.
      */
     content(content: string) : ModelResponseBuilder {
         this._content = content;
@@ -131,6 +157,7 @@ export class ModelResponseBuilder {
     
     /**
      * Set the thinking content for the response message.
+     * @returns This builder for chaining.
      */
     thinking(thinking: string) : ModelResponseBuilder {
         this._thinking = thinking;
@@ -139,6 +166,7 @@ export class ModelResponseBuilder {
 
     /**
      * Build the ModelResponse from the collected fields.
+     * @returns Constructed ModelResponse instance.
      */
     build() : ModelResponse {
         return new ModelResponse(this._toolCalls, this._role, this._content, this._thinking);

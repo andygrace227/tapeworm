@@ -12,14 +12,26 @@ import {Agent, OllamaModel, Parameter, Tool, ToolSchema} from '../../dist/tapewo
  */
 class AdditionTool extends Tool {
 
+    /**
+     * Unique name used to reference this tool.
+     * @returns Tool identifier string.
+     */
     getName() {
         return "AdditionTool";
     }
 
+    /**
+     * Short description provided to the model.
+     * @returns Human-readable explanation of the tool.
+     */
     getDescription() {
         return "Adds two numbers together.";
     }
 
+    /**
+     * Define required parameters and return shape for the tool.
+     * @returns ToolSchema describing input and output expectations.
+     */
     getToolSchema() {
         return ToolSchema.builder()
             .addParameter(
@@ -44,6 +56,11 @@ class AdditionTool extends Tool {
             .build();
     }
 
+    /**
+     * Perform the addition using the provided arguments.
+     * @param input Object containing numeric values for a and b.
+     * @returns Sum of a and b.
+     */
     execute(input) {
         let a = +input.a;
         let b = +input.b;

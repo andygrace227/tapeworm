@@ -10,11 +10,20 @@ export default class Message {
     role!: string;
     content!: MessageComponent[];
 
+    /**
+     * Wrap a set of message components with an associated sender role.
+     * @param role Source of the message (e.g., user, assistant, tool).
+     * @param content Ordered list of message components that make up the message body.
+     */
     constructor(role: string, content: MessageComponent[]) {
         this.role = role;
         this.content = content;
     }
 
+    /**
+     * Create a new message builder for ergonomic construction.
+     * @returns A MessageBuilder instance.
+     */
     static builder() {
         return new MessageBuilder();
     }
@@ -31,17 +40,30 @@ export class MessageBuilder {
     private _role!: string;
     private _content!: MessageComponent[];
 
+    /**
+     * Set the role associated with the message being built.
+     * @param role Source of the message (e.g., user, assistant, tool).
+     * @returns This builder for chaining.
+     */
     role(role: string) : MessageBuilder {
         this._role = role;
         return this;
     }
 
+    /**
+     * Ensure the content array is initialized before appending components.
+     */
     init() : void {
         if (this._content == undefined) {
             this._content = [];
         }
     }
 
+    /**
+     * Attach a tool call component if provided.
+     * @param toolCall Tool call to append to the message.
+     * @returns This builder for chaining.
+     */
     toolCall(toolCall: ToolCall | undefined) : MessageBuilder {
         if (toolCall == undefined) {
             return this;
@@ -51,6 +73,11 @@ export class MessageBuilder {
         return this;
     }
 
+    /**
+     * Attach a tool result component if provided.
+     * @param toolResult Result of a previously executed tool call.
+     * @returns This builder for chaining.
+     */
     toolResult(toolResult: ToolResult | undefined) : MessageBuilder {
         if (toolResult == undefined) {
             return this;
@@ -60,6 +87,11 @@ export class MessageBuilder {
         return this;
     }
 
+    /**
+     * Attach a thinking component if provided.
+     * @param thinking Reflection or chain-of-thought text.
+     * @returns This builder for chaining.
+     */
     thinking(thinking: string | undefined) : MessageBuilder {
         if (thinking == undefined) {
             return this;
@@ -69,6 +101,11 @@ export class MessageBuilder {
         return this;
     }
 
+    /**
+     * Attach content to the message if provided.
+     * @param content Assistant or user text content.
+     * @returns This builder for chaining.
+     */
     content(content: string | undefined) : MessageBuilder {
         if (content == undefined) {
             return this;
@@ -78,6 +115,10 @@ export class MessageBuilder {
         return this;
     }
 
+    /**
+     * Construct the Message with the accumulated values.
+     * @returns Finalized Message instance.
+     */
     build() {
         return new Message(this._role, this._content);
     }
@@ -121,6 +162,10 @@ export class MessageComponent {
 export class Content extends MessageComponent {
     text!: string;
 
+    /**
+     * Create a content component with the provided text.
+     * @param text Body of the content block.
+     */
     constructor(text: string) {
         super();
         this.text = text;
@@ -160,6 +205,10 @@ export class Content extends MessageComponent {
 export class Thinking extends MessageComponent {
     thought!: string;
 
+    /**
+     * Create a thinking component with the provided thought text.
+     * @param thought Chain-of-thought or reasoning string.
+     */
     constructor(thought: string) {
         super();
         this.thought = thought;
@@ -184,7 +233,7 @@ export class Thinking extends MessageComponent {
     /**
      * Shorthand for the constructor
      * @param thought - the text this content block represents.
-     * @returns a new Content messagecomponent with the text.
+     * @returns a new Thinking message component with the text.
      */
     static of(thought: string) : Thinking{
         return new this(thought);
@@ -201,6 +250,12 @@ export class ToolResult extends MessageComponent {
     toolName: string;
     toolResult!: any;
 
+    /**
+     * Create a tool result component for a completed tool call.
+     * @param id Identifier of the originating tool call.
+     * @param toolName Name of the tool that produced the result.
+     * @param toolResult Output returned by the tool.
+     */
     constructor(id: string, toolName: string, toolResult: any) {
         super();
         this.id = id;
@@ -218,8 +273,9 @@ export class ToolResult extends MessageComponent {
 
     /**
      * Shorthand for the constructor
-     * @param thought - the text this content block represents.
-     * @returns a new Content messagecomponent with the text.
+     * @param toolCall Original tool call that produced this result.
+     * @param toolResult Output to attach to the tool result component.
+     * @returns a new ToolResult component mirroring the provided tool call.
      */
     static of(toolCall: ToolCall, toolResult: any) : ToolResult {
         return new this(toolCall.id, toolCall.name, toolResult);

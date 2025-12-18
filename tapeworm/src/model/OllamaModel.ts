@@ -4,6 +4,9 @@ import ToolCall from "../tool/toolCall";
 import { Model, ModelRequest, ModelResponse, ModelResponseBuilder } from "./model";
 
 
+/**
+ * Model adapter that translates between Tapeworm message/tool shapes and the Ollama chat API.
+ */
 export default class OllamaModel extends Model {
     endpoint: string;
     model : string;
@@ -84,6 +87,8 @@ export default class OllamaModel extends Model {
 
     /**
      * Convert internal tool definitions into the JSON schema format expected by Ollama.
+     * @param request Model request containing declared tools.
+     * @returns Array of tool schema objects formatted for the Ollama API.
      */
     _formatTools(request: ModelRequest) : any {
         let tools = [];
@@ -123,6 +128,8 @@ export default class OllamaModel extends Model {
     /**
      * Convert internal message objects into Ollama's chat message shape.
      * Passes through assistant/system/user roles and maps tool role into the expected structure.
+     * @param request Model request containing the message history.
+     * @returns Array of serialized messages ready for Ollama.
      */
     _formatMessages(request: ModelRequest) : any {
         let messageObject = [];
@@ -153,6 +160,8 @@ export default class OllamaModel extends Model {
 
     /**
      * Format everything sent by a user or LLM (no tools)
+     * @param message Message to serialize for Ollama.
+     * @returns Serialized message payload.
      */
     _formatSingleMessage(message: Message) : any {
         let messageObject : any = {
@@ -203,6 +212,11 @@ export default class OllamaModel extends Model {
         return messageObject;
     }
 
+    /**
+     * Convert a ToolCall into the structure Ollama expects.
+     * @param toolCall ToolCall to serialize.
+     * @returns Minimal representation containing function name and arguments.
+     */
     _formatToolCall(toolCall: ToolCall) : any {
         return {
             function : {
