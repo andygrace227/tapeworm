@@ -1,20 +1,20 @@
-
-
 ![Tapeworm Logo](./tapeworm.svg)
 
 # Tapeworm
 
 Tapeworm is an in-browser and node agent framework.
 
+This is the root package for Tapeworm. You can consume other packages like @atgs/tapeworm_bedrock for AWS Bedrock support.
+
 It provides an object-oriented API to create agents that run either on Node or within the browser.
 
-**This project is currently in alpha and is under active development.** 
+**This project is currently in alpha and is under active development.**
 
 ## Current Features
-- Base API Defined
-- Supports `function` tools 
-- Supports Ollama models
 
+- Base API Defined
+- Supports `function` tools
+- Supports Ollama models
 
 ## Example
 
@@ -59,11 +59,9 @@ await agent.invoke("What is 9 + 10"); // Most likely doesn't print 21.
 
 ```
 
-
-
 ## Roadmap
 
-Tapeworm seeks to be the most ergonomic agentic solution for Node and the browser. 
+Tapeworm seeks to be the most ergonomic agentic solution for Node and the browser.
 
 It has a long way to go before this project is there, but I believe we're off to a good start.
 
@@ -79,22 +77,22 @@ In the meantime, schemas are easy to define with builders. See the example calcu
 
 We will build JS Docs and expose them, and more examples.
 
-
 ### Plug 'n Play Proxy Servers
 
 AI Proxy servers are lightweight wrappers around your inference provider. If you're writing a Node app, you'll likely not need one, but if you're writing a browser application and want tools executing in the browser, they're likely necessary for security unless you're writing a prototype, because AI proxy servers allow you to keep your API keys private and meter consumption.
 
 A production-ready proxy server targeting Node will be available from this repository. It will offer these features:
+
 - Very simple configuration
 - Portability/modularity in your existing node applications
 - Ability to integrate into Redis or other databases for per-IP/per-customer metering
-
 
 ### Providers
 
 Tapeworm has only a built-in implementation for Ollama models at the moment.
 
 Soon, this will change. I will be targeting newer providers in this order:
+
 - Your own proxy server
 - AWS Bedrock
 - Vertex AI
@@ -115,9 +113,8 @@ Swarms, teams, and graphs will become first-class features of Tapeworm, along wi
 
 ### Built-in tools
 
-More built-in tools will be added. Would love to get a code interpreter for JS working. 
-
-
+More built-in tools will be added. Would love to get a code interpreter for JS working.
 
 ## Any suggestions?
-Feel free to leave an issue. 
+
+Feel free to leave an issue.
