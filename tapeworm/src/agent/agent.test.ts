@@ -1,5 +1,6 @@
 import Agent from './agent';
-import { Model, ModelResponse } from '../model/model';
+import { Model } from '../model/model';
+import Message, { MessageBuilder } from '../conversation/message';
 import Tool from '../tool/tool';
 import ToolCall, { ToolCallBuilder } from '../tool/toolCall';
 import ToolSchema from '../tool/toolschema';
@@ -57,11 +58,11 @@ const buildAgent = (responses: any[], tools: Tool[] = []) => {
 
 describe('Agent.invoke', () => {
     it('initializes the conversation and forwards messages to the model', async () => {
-        const modelResponses = [
-            {
-                role: "assistant",
-                content: "hi there"
-            }
+        const modelResponses : Message[] = [
+            Message.builder()
+                .role("assistant")
+                .content("hi there")
+                .build()
         ];
         const agent = buildAgent(modelResponses);
 
@@ -88,12 +89,16 @@ describe('Agent.invoke', () => {
             .build();
 
         const responses = [
-            ModelResponse.builder()
+            Message.builder()
                 .role('assistant')
                 .content('calling tool')
                 .toolCalls([toolCall])
-                .build(),
-            ModelResponse.builder().role('assistant').content('done').build(),
+                .build()
+            ,
+            Message.builder()
+                .role('assistant')
+                .content('done')
+                .build()
         ];
 
         const tool = new EchoTool();

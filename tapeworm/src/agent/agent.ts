@@ -1,6 +1,6 @@
 import Conversation, { ConversationManager } from "../conversation/conversation";
-import Message, { ToolResult } from "../conversation/message";
-import { ModelRequestBuilder, ModelResponse, type Model } from "../model/model";
+import Message, { MessageComponentType, ToolResult } from "../conversation/message";
+import { ModelRequestBuilder, type Model } from "../model/model";
 import type Tool from "../tool/tool";
 import type ToolCall from "../tool/toolCall";
 import { ToolNotFoundError } from "../tool/toolCall";
@@ -50,30 +50,20 @@ export default class Agent {
         while (!doneWithCalls) {
 
             let response = await this._runQuery();
-
-            let messageBuilder =  Message.builder()
-                    .role(response.role ?? 'assistant')
-                    .content(response.content)
-                    .thinking(response.thinking);
-
-            response.toolCalls?.forEach( toolCall => messageBuilder = messageBuilder.toolCall(toolCall));
-
-            this.conversation.append(messageBuilder.build());
-
-            console.log("Assistant thinking: " + response.thinking);
-            console.log("Assistant reply: " + response.content);
+            this.conversation.append(response);
 
             doneWithCalls = true;
+            const toolCalls = response.filter(MessageComponentType.ToolCall) as ToolCall[];
 
-            if (response.toolCalls != undefined && response.toolCalls.length != 0) {
+            if (toolCalls != undefined && toolCalls.length != 0) {
                 doneWithCalls = false;
-                response.toolCalls.sort(
+                toolCalls.sort(
                     (a, b) => {
                     return (a.sequence ?? 0) < (b.sequence ?? 0) ? -1 : 1;
                 });
 
-                for (let toolCall in response.toolCalls) {
-                    this._runTool(response.toolCalls[toolCall]);
+                for (let toolCall of toolCalls) {
+                    this._runTool(toolCall);
                 }
             }
         }
@@ -83,7 +73,7 @@ export default class Agent {
      * Ask the backing model for the next response given the current conversation state.
      * @returns Parsed model response including content, thinking, and tool calls.
      */
-    async _runQuery() : Promise<ModelResponse> {
+    async _runQuery() : Promise<Message> {
 
         return await this.model.invoke(
             new ModelRequestBuilder()

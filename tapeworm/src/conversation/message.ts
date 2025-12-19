@@ -28,6 +28,14 @@ export default class Message {
         return new MessageBuilder();
     }
 
+    /**
+     * Filters the message contents based on the message type.
+     */
+    filter(type: MessageComponentType) : MessageComponent[] {
+        return this.content.filter((component) => {
+            return component.getMessageComponentType() == type;
+        });
+    }
 }
 
 /**
@@ -70,6 +78,22 @@ export class MessageBuilder {
         }
         this.init();
         this._content.push(toolCall);
+        return this;
+    }
+
+    /**
+     * Attach SEVERAL tool call component if provided.
+     * @param toolCall Tool call to append to the message.
+     * @returns This builder for chaining.
+     */
+    toolCalls(toolCalls: ToolCall[] | undefined) : MessageBuilder {
+        if (toolCalls == undefined) {
+            return this;
+        }
+        this.init();
+        for (const call of toolCalls) {
+            this._content.push(call);
+        }
         return this;
     }
 

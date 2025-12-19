@@ -1,7 +1,7 @@
-import { Tool, type Message } from "..";
+import { Message } from "..";
 import { Content, MessageComponentType, Thinking, ToolResult } from "../conversation/message";
 import ToolCall from "../tool/toolCall";
-import { Model, ModelRequest, ModelResponse, ModelResponseBuilder } from "./model";
+import { Model, ModelRequest } from "./model";
 
 
 /**
@@ -29,7 +29,7 @@ export default class OllamaModel extends Model {
      * Call the Ollama chat API with the provided conversation and tools.
      * Formats the request, performs the HTTP POST, and translates the response into a ModelResponse.
      */
-    async invoke(request: ModelRequest) : Promise<ModelResponse> {
+    async invoke(request: ModelRequest) : Promise<Message> {
         let requestObject : any = {
             model: this.model,
             messages: this._formatMessages(request),
@@ -77,7 +77,7 @@ export default class OllamaModel extends Model {
             }
         }
 
-        return new ModelResponseBuilder()
+        return Message.builder()
             .toolCalls(toolCalls)
             .role(message['message']['role'])
             .content(message['message']['content'])

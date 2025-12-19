@@ -1,3 +1,4 @@
+import type { MessageComponent } from "../conversation/message";
 import type Message from "../conversation/message";
 import type Tool from "../tool/tool";
 import type ToolCall from "../tool/toolCall";
@@ -11,7 +12,7 @@ export class Model {
      * Execute the model against the provided request.
      * @param request Aggregated messages and tools to send to the model.
      */
-    async invoke(request: ModelRequest) : Promise<ModelResponse> {
+    async invoke(request: ModelRequest) : Promise<Message> {
         throw new ModelNotImplementedError("The invoke function for this model was not correctly implemented.");
     }
 
@@ -85,92 +86,6 @@ export class ModelRequestBuilder {
         return new ModelRequest(this._messages, this._tools);
     }
 
-}
-
-/**
- * Parsed model response including content, role, tool calls, and optional thinking.
- */
-export class ModelResponse {
-    toolCalls?: ToolCall[];
-    role?: string;
-    content?: string;
-    thinking? : string;
-
-    /**
-     * Wrap a model response.
-     * @param toolCalls Optional tool calls returned by the model.
-     * @param role Role of the message (e.g., assistant, tool).
-     * @param content Text content returned by the model.
-     */
-    constructor(toolCalls: ToolCall[], role: string | undefined, content: string | undefined, thinking: string | undefined) {
-        this.toolCalls = toolCalls;
-        this.role = role;
-        this.content = content;
-        this.thinking = thinking;
-    }
-
-    /**
-     * Create a builder for composing a model response.
-     * @returns A ModelResponseBuilder instance.
-     */
-    static builder() : ModelResponseBuilder {
-        return new ModelResponseBuilder();
-    }
-}
-
-/**
- * Fluent builder for constructing ModelResponse instances.
- */
-export class ModelResponseBuilder {
-    private _toolCalls!: ToolCall[];
-    private _role?: string;
-    private _content?: string;
-    private _thinking? : string;
-
-    /**
-     * Attach tool calls to the response.
-     * @returns This builder for chaining.
-     */
-    toolCalls(toolCalls : ToolCall[]) : ModelResponseBuilder {
-        this._toolCalls = toolCalls;
-        return this;
-    }
-
-    /**
-     * Set the role for the response message.
-     * @returns This builder for chaining.
-     */
-    role(role: string) : ModelResponseBuilder{
-        this._role = role;
-        return this;
-    }
-
-    /**
-     * Set the textual content for the response message.
-     * @returns This builder for chaining.
-     */
-    content(content: string) : ModelResponseBuilder {
-        this._content = content;
-        return this;
-    }
-
-    
-    /**
-     * Set the thinking content for the response message.
-     * @returns This builder for chaining.
-     */
-    thinking(thinking: string) : ModelResponseBuilder {
-        this._thinking = thinking;
-        return this;
-    }
-
-    /**
-     * Build the ModelResponse from the collected fields.
-     * @returns Constructed ModelResponse instance.
-     */
-    build() : ModelResponse {
-        return new ModelResponse(this._toolCalls, this._role, this._content, this._thinking);
-    }
 }
 
 /**
