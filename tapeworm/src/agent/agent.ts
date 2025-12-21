@@ -51,10 +51,11 @@ export default class Agent {
       if (this.conversationManager != undefined) {
         this.conversation.manager = this.conversationManager;
       }
-
-      this.conversation.append(
-        Message.builder().role("system").content(this.systemPrompt).build(),
-      );
+      if (this.systemPrompt != undefined) {
+        this.conversation.append(
+          Message.builder().role("system").content(this.systemPrompt).build(),
+        );
+      }
     }
     this.conversation.append(
       Message.builder().role("user").content(query).build(),

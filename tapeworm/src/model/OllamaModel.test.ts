@@ -139,8 +139,8 @@ describe("OllamaModel", () => {
             parameters: {
               type: "object",
               properties: {
-                first: { type: "first", description: "first param" },
-                second: { type: "second", description: "second param" },
+                first: { type: "string", description: "first param" },
+                second: { type: "number", description: "second param" },
               },
               required: ["first"],
             },
@@ -154,7 +154,7 @@ describe("OllamaModel", () => {
             parameters: {
               type: "object",
               properties: {
-                third: { type: "third", description: "third param" },
+                third: { type: "string", description: "third param" },
               },
               required: ["third"],
             },
