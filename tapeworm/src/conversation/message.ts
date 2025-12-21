@@ -143,6 +143,9 @@ export class MessageBuilder {
    * @returns Finalized Message instance.
    */
   build() {
+    if (this._content == undefined || this._content.length == 0) {
+      throw new Error("Role-only messages are not supported by Tapeworm.");
+    }
     return new Message(this._role, this._content);
   }
 }

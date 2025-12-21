@@ -93,13 +93,13 @@ export default class OllamaModel extends Model {
   _formatTools(request: ModelRequest): any {
     let tools = [];
 
-    let required = [];
     for (let tool of request.tools) {
       let parameterObject: any = {};
+      let required = [];
 
       for (let parameter of tool.getToolSchema().parameters) {
         parameterObject[parameter.name] = {};
-        parameterObject[parameter.name]["type"] = parameter.name;
+        parameterObject[parameter.name]["type"] = parameter.type;
         parameterObject[parameter.name]["description"] = parameter.description;
         if (parameter.required) {
           required.push(parameter.name);
