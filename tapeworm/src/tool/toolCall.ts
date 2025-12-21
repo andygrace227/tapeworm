@@ -111,8 +111,10 @@ export class ToolCallBuilder {
    * @param id Unique identifier returned by the model.
    * @returns This builder for chaining.
    */
-  id(id: string): ToolCallBuilder {
-    this._id = id;
+  id(id: string | undefined): ToolCallBuilder {
+    if (id != undefined) {
+      this._id = id;
+    }
     return this;
   }
 
@@ -124,6 +126,11 @@ export class ToolCallBuilder {
     if (this._sequence == undefined) {
       this._sequence = 0;
     }
+    if (this._id == undefined) {
+      // Generate a random ID. Does not need to be cryptographically secure nor very long.
+      this._id = (Math.random() + 1).toString(36).slice(2, 7);
+    }
+
     return new ToolCall(
       this._sequence,
       this._name,

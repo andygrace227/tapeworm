@@ -1,0 +1,16 @@
+{
+    "presets": [
+        ["@babel/preset-env", {
+            "modules": false
+        }]
+    ],
+    "plugins": [
+        "@atgs/tapeworm-decorator",
+        [
+            "@babel/plugin-syntax-decorators",
+            {
+                "decoratorsBeforeExport": true
+            }
+        ]
+    ]
+}

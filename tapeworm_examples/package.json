@@ -1,0 +1,23 @@
+{
+  "name": "tapeworm_examples",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "index.js",
+  "dependencies": {
+    "@atgs/babel-plugin-tapeworm-decorator": "file:.yalc/@atgs/babel-plugin-tapeworm-decorator",
+    "@atgs/tapeworm": "0.1.2",
+    "@atgs/tapeworm_decorator": "file:.yalc/@atgs/tapeworm_decorator",
+    "@babel/plugin-syntax-decorators": "^7.27.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.28.3",
+    "@babel/core": "^7.28.5",
+    "@babel/preset-env": "^7.28.5",
+    "prettier": "^3.7.4"
+  },
+  "scripts": {
+    "build": " babel src --out-dir dist --extensions .js",
+    "start": "node dist/CalculatorBot.js",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,md}\""
+  }
+}

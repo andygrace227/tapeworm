@@ -1,10 +1,14 @@
 {
   "name": "@atgs/tapeworm",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "type": "module",
   "main": "dist/tapeworm.cjs.js",
   "module": "dist/tapeworm.es.js",
   "browser": "dist/tapeworm.umd.js",
+  "exports": {
+    "import": "./dist/tapeworm.es.js",
+    "require": "./dist/tapeworm.cjs.js"
+  },
   "types": "dist/index.d.ts",
   "files": [
     "dist",

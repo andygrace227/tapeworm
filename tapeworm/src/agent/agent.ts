@@ -38,6 +38,7 @@ export default class Agent {
     this.conversationManager = conversationManager;
     this.tools = tools;
     this.callback = callback;
+    this.conversationManager.configure(model);
   }
 
   /**
@@ -80,7 +81,7 @@ export default class Agent {
         });
 
         for (let toolCall of toolCalls) {
-          this._runTool(toolCall);
+          await this._runTool(toolCall);
         }
       }
     }
@@ -128,7 +129,7 @@ export default class Agent {
     let tool = this.tools[this.toolNameToIndexMap[toolCall.name]];
 
     try {
-      let result = tool.execute(toolCall.parameters);
+      let result = await tool.execute(toolCall.parameters);
       this.conversation.append(
         Message.builder()
           .role("tool")

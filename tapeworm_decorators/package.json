@@ -1,0 +1,22 @@
+{
+  "name": "@atgs/babel-plugin-tapeworm-decorator",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,md}\"",
+    "build": "./node_modules/.bin/babel src --out-dir dist"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.28.3",
+    "@babel/core": "^7.28.5",
+    "@babel/types": "^7.28.5",
+    "prettier": "^3.7.4",
+    "vite": "^7.2.7"
+  }
+}
