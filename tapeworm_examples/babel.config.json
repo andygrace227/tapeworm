@@ -5,7 +5,7 @@
         }]
     ],
     "plugins": [
-        "@atgs/tapeworm-decorator",
+        "@atgs/babel-plugin-tapeworm-decorator",
         [
             "@babel/plugin-syntax-decorators",
             {

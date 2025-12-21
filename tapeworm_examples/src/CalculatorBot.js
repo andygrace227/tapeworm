@@ -67,7 +67,7 @@ const ollama = new OllamaModel("http://localhost:11434", "gpt-oss:20b", {
 const agent = Agent.builder()
   .name("calculatorAgent")
   .tools([new AdditionTool(), new MultiplicationTool()])
-  .systemPrompt("You are an agent that runs math operations.")
+  .systemPrompt("You are an agent that runs math operations. Use your tools to double check your work.")
   .model(ollama)
   .build();
 
