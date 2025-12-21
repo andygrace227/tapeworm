@@ -84,6 +84,11 @@ export class ModelRequestBuilder {
     if (this._tools == undefined) {
       this._tools = [];
     }
+    if (this._messages == undefined) {
+      throw new MessagesNotDefinedError(
+        "Requests to the model should include content.",
+      );
+    }
     return new ModelRequest(this._messages, this._tools);
   }
 }
@@ -95,5 +100,16 @@ class ModelNotImplementedError extends Error {
   constructor(message: string) {
     super(message);
     this.name = "ModelNotImplementedError";
+  }
+}
+
+/**
+ * MessagesNotDefinedError errors are runtime errors that show up when a user passes no messages to the Model.
+ * This will result in undefined behavior.
+ */
+class MessagesNotDefinedError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "MessagesNotDefinedError";
   }
 }

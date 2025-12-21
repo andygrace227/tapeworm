@@ -8,7 +8,7 @@ import {
   Parameter,
   Tool,
   ToolSchema,
-} from "../../dist/tapeworm.es.js";
+} from "@atgs/tapeworm";
 
 /**
  * Tool that uses finite difference methods to evaluate the rate of change of a function.
@@ -77,10 +77,11 @@ const ollama = new OllamaModel("http://localhost:11434", "gpt-oss:20b", {
   stream: false,
 });
 
-const agent = new Agent();
-agent.name = "calculatorAgent";
-agent.tools = [new AdditionTool()];
-agent.system_prompt = "You are an agent that runs math operations.";
-agent.model = ollama;
+const agent = Agent.builder()
+  .name("calculatorAgent")
+  .tools([new AdditionTool()])
+  .systemPrompt("You are an agent that runs math operations.")
+  .model(ollama)
+  .build();
 
 await agent.invoke("What is 9 + 10");

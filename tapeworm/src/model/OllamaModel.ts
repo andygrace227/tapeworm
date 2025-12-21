@@ -65,13 +65,22 @@ export default class OllamaModel extends Model {
         let type: string = "function";
         let name: string = toolCallObject[type]?.name;
         let sequence: number | undefined = toolCallObject[type]?.index;
-        let parameterObject: any = toolCallObject[type]?.arguments;
+        let id: string | undefined = toolCallObject["id"] ?? undefined;
+
+        // Tapeworm does not make any assumptions regardintg the nature/type of the object.
+        // Returned parameters from Ollama, as of 2025, will be a valid JS object and not
+        // a string.
+        let parameterObject: any =
+          typeof toolCallObject[type]?.arguments === "string"
+            ? JSON.parse(toolCallObject[type]?.arguments)
+            : toolCallObject[type]?.arguments;
         toolCalls.push(
           ToolCall.builder()
             .name(name)
             .type(type)
             .parameters(parameterObject)
             .sequence(sequence)
+            .id(id)
             .build(),
         );
       }
@@ -93,13 +102,13 @@ export default class OllamaModel extends Model {
   _formatTools(request: ModelRequest): any {
     let tools = [];
 
-    let required = [];
     for (let tool of request.tools) {
       let parameterObject: any = {};
+      let required = [];
 
       for (let parameter of tool.getToolSchema().parameters) {
         parameterObject[parameter.name] = {};
-        parameterObject[parameter.name]["type"] = parameter.name;
+        parameterObject[parameter.name]["type"] = parameter.type;
         parameterObject[parameter.name]["description"] = parameter.description;
         if (parameter.required) {
           required.push(parameter.name);

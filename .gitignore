@@ -1,6 +1,6 @@
 */node_modules
 *.DS_Store
-
+*/package_lock.json
 # Logs
 logs
 *.log
@@ -14,7 +14,8 @@ node_modules
 dist
 dist-ssr
 *.local
-
+*.yalc
+yalc.lock
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
