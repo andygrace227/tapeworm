@@ -48,12 +48,12 @@ class EchoTool extends Tool {
 }
 
 const buildAgent = (responses: any[], tools: Tool[] = []) => {
-  const agent = new Agent();
-  agent.name = "testAgent";
-  agent.system_prompt = "testSystemPrompt";
-  agent.tools = tools;
-  agent.model = new FakeModel(responses);
-  return agent;
+  return Agent.builder()
+    .name("testAgent")
+    .systemPrompt("testSystemPrompt")
+    .tools(tools)
+    .model(new FakeModel(responses))
+    .build();
 };
 
 describe("Agent.invoke", () => {
