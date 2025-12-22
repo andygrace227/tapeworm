@@ -1,12 +1,11 @@
 ![Tapeworm Logo](https://raw.githubusercontent.com/andygrace227/tapeworm/main/tapeworm.svg)
 
-# Tapeworm
-<h3>In-browser and Node agent framework.</h3>
+# Tapeworm Core
+
+<h3>In-browser and Node Agent Framework.</h3>
 
 [![npm version](https://img.shields.io/npm/v/@atgs/tapeworm.svg?style=flat-square)](https://www.npmjs.org/package/@atgs/tapeworm.svg)
-
 [![npm downloads](https://img.shields.io/npm/dm/@atgs/tapeworm?style=flat-square)](https://npm-stat.com/charts.html?package=@atgs/tapeworm)
-
 [repo link](https://github.com/andygrace227/tapeworm)
 
 This is the root package for Tapeworm. You can consume other packages like @atgs/tapeworm_bedrock for AWS Bedrock support.
@@ -15,26 +14,43 @@ It provides an object-oriented API to create agents that run either on Node or w
 
 **This project is currently in alpha and is under active development.**
 
-
-
 ## Current Features
 
-- Base API Defined.
 - Supports `function` tools.
 - Supports Ollama models.
-- Has a Babel plugin to make tool creation really easy.
+- Has a Babel plugin to make tool creation easy.
+- Has TS decorators to make tool creation really easy, too!
+- Supports browser and Node. 
+
+
+## Tapeworm's Tenets
+
+- **Be the most ergonomic agentic solution for Node and the browser.** Each commit should make it easier to develop and deploy agentic AI solutions.
+- **Be as model-agnostic as possible.** Use your own machine, AWS, Google, a literal potato... we don't care.
+- **Keep things light.** We already waste so much water and energy with AI. The overhead from Tapeworm should be kept to a minimum when possible.
+
 
 ## Examples
+
+### How do I define a tool?
 
 #### With the babel plugin (@atgs/@atgs/babel-plugin-tapeworm-decorator) (recommended, super concise)
 
 ```js
-
-@Tool({ description: "Adds 2 numbers together"})
+@Tool({ description: "Adds 2 numbers together" })
 class AdditionTool extends Tool {
-
-  @TParam({name: "a", description: "The first number to add", required: true, type:"number"})
-  @TParam({name: "b", description: "The second number to add", required: true, type:"number"})
+  @TParam({
+    name: "a",
+    description: "The first number to add",
+    required: true,
+    type: "number",
+  })
+  @TParam({
+    name: "b",
+    description: "The second number to add",
+    required: true,
+    type: "number",
+  })
   @TOutput("The sum of inputs a and b")
   execute(input) {
     let a = +input.a;
@@ -44,6 +60,78 @@ class AdditionTool extends Tool {
   }
 }
 
+```
+
+#### With Typescript Decorators
+```ts
+@ToolName("AdditionTool")
+@ToolDescription("Adds two numbers together.")
+@ToolParameter({name: "a", description: "The first number to add", required: true, type:"number"})
+@ToolParameter({name: "b", description: "The second number to add", required: true, type:"number"})
+@ToolOutput("The sum of inputs a and b")
+class AdditionTool extends Tool {
+
+  execute(input : any) {
+    let a = +input.a;
+    let b = +input.b;
+    console.log("Adding " + a + " and " + b + ": " + (a + b));
+    return a + b;
+  }
+}
+
+```
+
+
+
+#### Without the plugin (still pretty readable)
+
+```js
+import {
+  Agent,
+  OllamaModel,
+  Parameter,
+  Tool,
+  ToolSchema,
+} from "../../dist/tapeworm.es.js";
+
+class AdditionTool extends Tool {
+
+  getName() {
+    return "AdditionTool";
+  }
+
+  getDescription() {
+    return "Adds two numbers together.";
+  }
+
+  getToolSchema() {
+    return (
+      ToolSchema.builder()
+        .addParameter(
+          Parameter.builder()
+            .name("a")
+            .description("The first number to add.")
+            .required(true)
+            .type("number")
+            .build(),
+        )
+        //... more parameter additions.
+        .output("A number that is equal to a + b")
+        .build()
+    );
+  }
+
+  execute(input) {
+    let a = +input.a;
+    let b = +input.b;
+    console.log("Adding " + a + " and " + b + ": " + (a + b));
+    return a + b;
+  }
+}
+```
+
+#### Then calling the agent:
+```js
 const ollama = new OllamaModel("http://localhost:11434", "gpt-oss:20b", {
   stream: false,
 });
@@ -56,87 +144,7 @@ const agent = Agent.builder()
   .build();
 
 await agent.invoke("What is 9 + 10?");
-
 ```
-
-#### Without the plugin (still pretty readable.)
-
-```js
-
-
-import {
-  Agent,
-  OllamaModel,
-  Parameter,
-  Tool,
-  ToolSchema,
-} from "../../dist/tapeworm.es.js";
-
-class AdditionTool extends Tool {
-  /**
-   * Unique name used to reference this tool.
-   * @returns Tool identifier string.
-   */
-  getName() {
-    return "AdditionTool";
-  }
-
-  /**
-   * Short description provided to the model.
-   * @returns Human-readable explanation of the tool.
-   */
-  getDescription() {
-    return "Adds two numbers together.";
-  }
-
-  getToolSchema() {
-    return ToolSchema.builder()
-      .addParameter(
-        Parameter.builder()
-          .name("a")
-          .description("The first number to add.")
-          .required(true)
-          .type("number")
-          .build(),
-      )
-      //... more parameter additions.
-      .output("A number that is equal to a + b")
-      .build();
-  }
-
-
-  execute(input) {
-    let a = +input.a;
-    let b = +input.b;
-    console.log("Adding " + a + " and " + b + ": " + (a + b));
-    return a + b;
-  }
-}
-
-// Because this is a test file, we are going to run this locally using Ollama
-
-const ollama = new OllamaModel("http://localhost:11434", "gpt-oss:20b", {
-  stream: false,
-});
-
-const agent = Agent.builder()
-  .name("calculatorAgent")
-  .tools([new AdditionTool()])
-  .systemPrompt("You are an agent that runs math operations.")
-  .model(ollama)
-  .build();
-
-await agent.invoke("What is 9 + 10");
-
-```
-
-## Tapeworm's Tenets
-
-- **Be the most ergonomic agentic solution for Node and the browser.** Each commit should make it easier to develop and deploy agentic AI solutions.
-- **Be as model-agnostic as possible.** Use your own machine, AWS, Google, a literal potato... we don't care.
-- **Keep things light.** We already waste so much water and energy with AI. The overhead from Tapeworm should be kept to a minimum when possible.
-
-
 
 ## Roadmap
 
