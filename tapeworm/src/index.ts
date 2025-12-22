@@ -23,3 +23,9 @@ export {
   Thinking,
   ToolResult,
 } from "./conversation/message";
+export {
+  ToolName,
+  ToolDescription,
+  ToolParameter,
+  ToolOutput,
+} from "./tool/toolDecorators";

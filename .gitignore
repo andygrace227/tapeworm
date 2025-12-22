@@ -16,6 +16,8 @@ dist-ssr
 *.local
 *.yalc
 yalc.lock
+package-lock.json
+**/package-lock.json
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

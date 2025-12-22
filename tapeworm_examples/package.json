@@ -4,10 +4,10 @@
   "type": "module",
   "main": "index.js",
   "dependencies": {
-    "@atgs/babel-plugin-tapeworm-decorator": "file:.yalc/@atgs/babel-plugin-tapeworm-decorator",
-    "@atgs/tapeworm": "0.1.3",
-    "@atgs/tapeworm_decorator": "file:.yalc/@atgs/tapeworm_decorator",
-    "@babel/plugin-syntax-decorators": "^7.27.1"
+    "@atgs/babel-plugin-tapeworm-decorator": "^0.1.0",
+    "@atgs/tapeworm": "^1.0.6",
+    "@babel/plugin-syntax-decorators": "^7.27.1",
+    "@babel/preset-typescript": "^7.28.5"
   },
   "devDependencies": {
     "@babel/cli": "^7.28.3",
@@ -16,7 +16,9 @@
     "prettier": "^3.7.4"
   },
   "scripts": {
-    "build": " babel src --out-dir dist --extensions .js",
+    "build:ts": "tsc -p tsconfig.json",
+    "build:js": "babel src --out-dir dist --extensions .js --ignore '**/*.ts'",
+    "build": "rm -rf dist && npm run build:ts && npm run build:js",
     "start": "node dist/CalculatorBot.js",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,md}\""
   }
