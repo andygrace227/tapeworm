@@ -20,15 +20,13 @@ It provides an object-oriented API to create agents that run either on Node or w
 - Supports Ollama models.
 - Has a Babel plugin to make tool creation easy.
 - Has TS decorators to make tool creation really easy, too!
-- Supports browser and Node. 
-
+- Supports browser and Node.
 
 ## Tapeworm's Tenets
 
 - **Be the most ergonomic agentic solution for Node and the browser.** Each commit should make it easier to develop and deploy agentic AI solutions.
 - **Be as model-agnostic as possible.** Use your own machine, AWS, Google, a literal potato... we don't care.
 - **Keep things light.** We already waste so much water and energy with AI. The overhead from Tapeworm should be kept to a minimum when possible.
-
 
 ## Examples
 
@@ -59,29 +57,35 @@ class AdditionTool extends Tool {
     return a + b;
   }
 }
-
 ```
 
 #### With Typescript Decorators
+
 ```ts
 @ToolName("AdditionTool")
 @ToolDescription("Adds two numbers together.")
-@ToolParameter({name: "a", description: "The first number to add", required: true, type:"number"})
-@ToolParameter({name: "b", description: "The second number to add", required: true, type:"number"})
+@ToolParameter({
+  name: "a",
+  description: "The first number to add",
+  required: true,
+  type: "number",
+})
+@ToolParameter({
+  name: "b",
+  description: "The second number to add",
+  required: true,
+  type: "number",
+})
 @ToolOutput("The sum of inputs a and b")
 class AdditionTool extends Tool {
-
-  execute(input : any) {
+  execute(input: any) {
     let a = +input.a;
     let b = +input.b;
     console.log("Adding " + a + " and " + b + ": " + (a + b));
     return a + b;
   }
 }
-
 ```
-
-
 
 #### Without the plugin (still pretty readable)
 
@@ -95,7 +99,6 @@ import {
 } from "../../dist/tapeworm.es.js";
 
 class AdditionTool extends Tool {
-
   getName() {
     return "AdditionTool";
   }
@@ -131,6 +134,7 @@ class AdditionTool extends Tool {
 ```
 
 #### Then calling the agent:
+
 ```js
 const ollama = new OllamaModel("http://localhost:11434", "gpt-oss:20b", {
   stream: false,

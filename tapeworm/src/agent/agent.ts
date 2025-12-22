@@ -44,9 +44,11 @@ export default class Agent {
   /**
    * Run the full agent loop for a user query: seed the conversation, invoke the model,
    * and execute any returned tool calls until completion.
+   *   *
    * @param query User-provided input to hand to the agent.
+   * @param callback A function that handles the messages coming from the agent.
    */
-  async invoke(query: string) {
+  async invoke(query: string, callback: (m: Message) => void = this.callback) {
     if (this.conversation == undefined) {
       this.conversation = new Conversation();
       if (this.conversationManager != undefined) {
@@ -66,7 +68,7 @@ export default class Agent {
 
     while (!doneWithCalls) {
       let response = await this._runQuery();
-      this.callback(response);
+      callback(response);
       this.conversation.append(response);
 
       doneWithCalls = true;
