@@ -32,11 +32,8 @@ jobs:
         run: |
           set -euxo pipefail
 
-          # 👇 EXPLICIT LIST — edit this
           PACKAGES=(
-            "pkg-a"
-            "pkg-b"
-            "pkg-c"
+            "tapeworm"
           )
 
           rm -rf _site
