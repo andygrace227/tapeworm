@@ -1,3 +1,14 @@
+/**
+ * The Agent module contains all things related to Agents, including:
+ * - the Agent class
+ * - the AgentBuilder class
+ * - the default callback handler for an Agent.
+ *
+ * This module contains most of the business logic for running the main agent loop.
+ *
+ * @module
+ */
+
 import Conversation, {
   ConversationManager,
   DefaultConversationManager,
@@ -14,18 +25,75 @@ import type ToolCall from "../tool/toolCall";
 import { ToolNotFoundError } from "../tool/toolCall";
 
 /**
- * Coordinates a model, its tools, and the running conversation to fulfill user queries.
+ * Agents combine a model with your tools.
+ *
+ * To build an agent, use the AgentBuilder class:
+ *
+ * ```ts
+ * const agent = Agent.builder()
+ *  .name("yourAgent")
+ *  .tools([new YourTool()])
+ *  .systemPrompt("You are an agent.")
+ *  .model(yourModel)
+ *  .build();
+ * ```
+ *
  */
 export default class Agent {
+  /**
+   * The name of the agent.
+   */
   name!: string;
+  /**
+   * The system prompt (if any) for the agent.
+   */
   systemPrompt?: string;
+
+  /**
+   * The tools this agent knows about and can run.
+   */
   tools!: Tool[];
+
+  /**
+   * The underlying model for the agent.
+   */
   model!: Model;
+
+  /**
+   * The conversation for the agent.
+   * You do not normally need to set this parameter unless you are building a use case
+   * where you have a persistent session with an agent.
+   */
   conversation!: Conversation;
+
+  /**
+   * The conversation manager for the agent.
+   * Normally, a converstation manager that does nothing will be used.
+   * When SummarizingConversationManager or RAGConversationManager is implemented, these will help you avoid
+   * token overflow.
+   */
   conversationManager?: ConversationManager;
-  toolNameToIndexMap: any | undefined;
+
+  /**
+   * A cache for looking up tools in the Tools array.
+   * DO NOT MANUALLY SET THIS VALUE. AGENT AUTOMATICALLY TAKES CARE OF IT.
+   */
+  private toolNameToIndexMap: any | undefined;
+
+  /**
+   * The callback function, invoked for every response from the model.
+   * The default implementation just prints to std.out or your console.
+   */
   callback!: (m: Message) => void;
 
+  /**
+   * This is the constructor for an Agent.
+   *
+   * i IMPLORE YOU not to use this method. You CAN, but you should be using the Builder instead
+   * for the best results, as this method WILL change with future updates.
+   *
+   * Builder will be a lot more stable and will always be backwards compatible.
+   */
   constructor(
     name: string,
     tools: Tool[],
@@ -162,12 +230,15 @@ export default class Agent {
     }
   }
 
+  /**
+   * Get a builder to build an Agent.
+   */
   static builder(): AgentBuilder {
     return new AgentBuilder();
   }
 }
 
-class AgentBuilder {
+export class AgentBuilder {
   _name!: string;
   _systemPrompt?: string;
   _tools!: Tool[];
@@ -177,21 +248,33 @@ class AgentBuilder {
   _toolNameToIndexMap: any | undefined;
   _callback: (m: Message) => void = (m: Message) => defaultCallback(m);
 
+  /**
+   * Set the name of the agent.
+   */
   name(name: string): AgentBuilder {
     this._name = name;
     return this;
   }
 
+  /**
+   * Set the system prompt of the agent.
+   */
   systemPrompt(systemPrompt: string | undefined): AgentBuilder {
     this._systemPrompt = systemPrompt;
     return this;
   }
 
+  /**
+   * Set the tools of the agent, if you already have an array of tools.
+   */
   tools(tools: Tool[]): AgentBuilder {
     this._tools = tools;
     return this;
   }
 
+  /**
+   * Add a tool, 1 by 1, to the agent..
+   */
   addTool(tool: Tool): AgentBuilder {
     if (this._tools == undefined) {
       this._tools = [];
@@ -200,21 +283,33 @@ class AgentBuilder {
     return this;
   }
 
+  /**
+   * Set the underlying model for the agent.
+   */
   model(model: Model): AgentBuilder {
     this._model = model;
     return this;
   }
 
+  /**
+   * Set the conversation manager for the agent.
+   */
   conversationManager(mgr: ConversationManager): AgentBuilder {
     this._conversationManager = mgr;
     return this;
   }
 
+  /**
+   * Set the callback for the agent.
+   */
   callback(callback: (m: Message) => void): AgentBuilder {
     this._callback = callback;
     return this;
   }
 
+  /**
+   * Build the agent.
+   */
   build(): Agent {
     let agent = new Agent(
       this._name,
@@ -236,6 +331,14 @@ class AgentBuilder {
   }
 }
 
+/**
+ * This function is Tapeworm's default callback function.
+ * If you do not specify your own callback function, then this will be called and all
+ * it will do is log output to the screen.
+ *
+ * You can override this per invocation or on the Agent itself to do other things
+ * with the LLM output.
+ */
 export function defaultCallback(m: Message) {
   for (const thinking of m.filter(MessageComponentType.Thinking)) {
     console.log("\x1b[90m" + (thinking as Thinking).get() + "\x1b[0m");

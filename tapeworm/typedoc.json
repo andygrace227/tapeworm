@@ -1,0 +1,10 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "tsconfig": "tsconfig.json",
+  "entryPointStrategy": "expand",
+  "entryPoints": ["src"],
+  "out": "docs",
+  "plugin": ["typedoc-plugin-rename-defaults"],
+  "exclude": ["**/*.test.ts", "**/__tests__/**"],
+  "readme": "README.md"
+}

@@ -1,3 +1,14 @@
+/**
+ * Tapeworm's first mostly-working model is OllamaModel,
+ * which routes model requests to an Ollama endpoint on your local machine.
+ *
+ * Other Models will be housed in separate NPM packages to allow better portability
+ * and to leverage the existing NPM packages (for example, the AWS SDK in the case of Bedrock)
+ * for those models.
+ *
+ * @module
+ */
+
 import { Message } from "..";
 import {
   Content,
@@ -9,7 +20,7 @@ import ToolCall from "../tool/toolCall";
 import { Model, ModelRequest } from "./model";
 
 /**
- * Model adapter that translates between Tapeworm message/tool shapes and the Ollama chat API.
+ * The Ollama Model class. This translates between Tapeworm message/tool shapes and the Ollama chat API.
  */
 export default class OllamaModel extends Model {
   endpoint: string;

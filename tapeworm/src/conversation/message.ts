@@ -1,3 +1,16 @@
+/**
+ * The Messages module contains all the shapes that make up a single Message.
+ * - The actual Message class, which is a role + an array of MessageComponents
+ *   - And a builder, too, which you should use 99.999% of the time!
+ * - An enum called MessageComponentType
+ * - The MessageComponents
+ *   - **Content** - normal text from the LLM
+ *   - **Thinking** - chain-of-thought reasoning from the LLM
+ *   - **ToolCall** is not technically contained here, but it is a message component type
+ *   - **ToolResult** - encodes the result of a tool call.
+ * @module
+ */
+
 import type ToolCall from "../tool/toolCall";
 
 /**

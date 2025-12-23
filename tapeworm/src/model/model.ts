@@ -1,3 +1,14 @@
+/**
+ * The Model module lays out the interface for a Tapeworm model.
+ *
+ * It contains the base Model class, which doesn't do anything other than throw errors and specify an interface,
+ * and also the ModelRequest and ModelRequestBuilder classes, which show what kind of shape a model expects to
+ * recieve upon invocation.
+ *
+ *
+ * @module
+ */
+
 import type Message from "../conversation/message";
 import type Tool from "../tool/tool";
 

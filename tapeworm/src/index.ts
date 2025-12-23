@@ -1,3 +1,11 @@
+/**
+ * The index module gathers the exports from Tapeworm.
+ *
+ * This file should be modified when new classes are introduced to Tapeworm
+ *
+ * @module
+ */
+
 export { default as Agent } from "./agent/agent";
 export {
   default as Conversation,

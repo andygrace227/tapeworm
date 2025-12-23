@@ -1,6 +1,6 @@
 {
   "name": "@atgs/tapeworm",
-  "version": "0.1.6",
+  "version": "0.1.8",
   "type": "module",
   "main": "dist/tapeworm.cjs.js",
   "module": "dist/tapeworm.es.js",
@@ -12,10 +12,12 @@
   "types": "dist/index.d.ts",
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "docs"
   ],
   "scripts": {
-    "build": "npm run format && npm run test && vite build && npm run build:types",
+    "build": "npm run format && npm run test && vite build && npm run build:types && npm run docs",
+    "docs": "typedoc --options typedoc.json",
     "build:types": "tsc -p tsconfig.types.json",
     "test": "jest",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,md}\""
@@ -27,6 +29,8 @@
     "jest": "^30.2.0",
     "prettier": "^3.7.4",
     "ts-node": "^10.9.2",
+    "typedoc": "^0.28.15",
+    "typedoc-plugin-rename-defaults": "^0.7.3",
     "typescript": "^5.9.3",
     "vite": "^7.2.7"
   }

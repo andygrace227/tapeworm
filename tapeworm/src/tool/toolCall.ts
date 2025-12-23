@@ -1,3 +1,12 @@
+/**
+ * This module is dedicated to just the ToolCall MessageComponent.
+ *
+ * The reason is that it's the most complicated MessageComponent and deserves to have its own file,
+ * as this class contains more ways to instantiate than normal MessageComponents.
+ *
+ * @module
+ */
+
 import {
   MessageComponent,
   MessageComponentType,

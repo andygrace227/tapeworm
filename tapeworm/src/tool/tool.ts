@@ -1,3 +1,8 @@
+/**
+ * The Tool module contains the Tool class, which shows
+ * what properties are required by a class to be invocable by Tapeworm.
+ */
+
 import type ToolSchema from "./toolschema";
 
 /**
@@ -15,19 +20,6 @@ class ToolNotDefinedError extends Error {
  *
  */
 export default class Tool {
-  private name: string;
-  private description: string;
-  private tool_schema: ToolSchema;
-
-  /**
-   * Initialize tool metadata from subclass implementations.
-   */
-  constructor() {
-    this.name = this.getName();
-    this.description = this.getDescription();
-    this.tool_schema = this.getToolSchema();
-  }
-
   /**
    * Name that uniquely identifies this tool.
    * @returns A short, stable identifier string.

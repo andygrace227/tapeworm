@@ -3,7 +3,7 @@
  *
  * They are different from the Babel decorators in @atgs/babel-plugin-tapeworm-decorator, but they achieve the same functionality.
  *
- *
+ * @module
  */
 
 import ToolSchema, { Parameter } from "./toolschema";

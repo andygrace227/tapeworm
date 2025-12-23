@@ -1,8 +1,22 @@
+/**
+ * The Conversation module contains the Conversation class and the ConversationManager prototypes.
+ *
+ * The Conversation is a wrapper around both a manager and an array of messages.
+ *
+ * The Conversation Manager is an object that can perform operations on only the conversation.
+ *
+ * While no Conversation Managers have been implemented yet, they will allow resilience to overflowing context windows.
+ *
+ * @module
+ */
+
 import type { Message } from "..";
 import type { Model } from "../model/model";
 
 /**
- * Maintains ordered chat messages and delegates to a conversation manager for compaction.
+ * A Conversation holds an array of messages and its associated manager.
+ *
+ * Conversations are (mostly) immutable, until the manager steps in and compacts the conversation.
  */
 export default class Conversation {
   messages: Message[];
@@ -27,7 +41,7 @@ export default class Conversation {
 }
 
 /**
- * Strategy interface for pruning or transforming a conversation history.
+ * Interface for compacting a Conversation. Future implementations can summarize or do RAG-based compaction
  */
 export class ConversationManager {
   /**

@@ -1,5 +1,18 @@
 /**
- * Tool schemas specify the input and output of a tool.
+ * This module contains everything related to tool schemas.
+ *
+ * Enclosed are the ToolSchema (and builder) and Parameter (and builder) classes.
+ *
+ * @module
+ */
+
+/**
+ * ToolSchemas define the input and output of a tool.
+ *
+ * They consist of a list of parameters and a description of the output of the tool.
+ *
+ * You can build these using ToolSchemaBuilder, but it can be more pragmatic to use
+ * the Typescript or Babel decorators instead, as they will automatically generate a ToolSchema for you.
  */
 export default class ToolSchema {
   parameters: Parameter[];
