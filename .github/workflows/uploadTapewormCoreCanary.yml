@@ -46,4 +46,4 @@ jobs:
       - name: Publish with dist-tag "canary"
         working-directory: tapeworm
         run: |
-          npm publish --tag canary --access public
+          npm publish --tag canary --access public --provenance
