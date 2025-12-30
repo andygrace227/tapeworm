@@ -1,0 +1,52 @@
+# Publish a canary build to NPM automatically on commits to mainline. Humans later promote the latest stable version manually.
+
+name: Tapeworm Canary
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "tapeworm/**"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: canary-tapeworm
+  cancel-in-progress: true
+
+jobs:
+  publish-canary:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: "https://registry.npmjs.org"
+          cache: "npm"
+          cache-dependency-path: tapeworm/package-lock.json
+
+      - name: Install + build + test
+        working-directory: tapeworm
+        run: |
+          npm ci
+          npm run build --if-present
+          npm test --if-present
+
+      - name: Set unique canary version
+        working-directory: tapeworm
+        run: |
+          BASE=$(node -p "require('./package.json').version.split('-')[0]")
+          SHA=$(git rev-parse --short HEAD)
+          # Example: 1.2.3-canary.482.a1b2c3d
+          npm version "${BASE}-canary.${GITHUB_RUN_NUMBER}.${SHA}" --no-git-tag-version
+
+      - name: Publish with dist-tag "canary"
+        working-directory: tapeworm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          npm publish --tag canary --access public
