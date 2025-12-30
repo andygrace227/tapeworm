@@ -45,7 +45,5 @@ jobs:
 
       - name: Publish with dist-tag "canary"
         working-directory: tapeworm
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           npm publish --tag canary --access public
