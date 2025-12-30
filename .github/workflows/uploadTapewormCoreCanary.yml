@@ -26,9 +26,7 @@ jobs:
         with:
           node-version: 20
           registry-url: "https://registry.npmjs.org"
-          cache: "npm"
-          cache-dependency-path: tapeworm/package-lock.json
-
+        
       - name: Install + build + test
         working-directory: tapeworm
         run: |
