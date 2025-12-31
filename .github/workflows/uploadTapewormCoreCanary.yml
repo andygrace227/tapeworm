@@ -41,9 +41,11 @@ jobs:
           BASE=$(node -p "require('./package.json').version.split('-')[0]")
           SHA=$(git rev-parse --short HEAD)
           # Example: 1.2.3-canary.482.a1b2c3d
-          npm version "${BASE}-canary.${GITHUB_RUN_NUMBER}.${SHA}" --no-git-tag-version --access public
+          npm version "${BASE}-canary.${GITHUB_RUN_NUMBER}.${SHA}" --no-git-tag-version
 
       - name: Publish with dist-tag "canary"
         working-directory: tapeworm
         run: |
           npm publish --tag canary --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
