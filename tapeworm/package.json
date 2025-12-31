@@ -7,7 +7,8 @@
   "browser": "dist/tapeworm.umd.js",
   "exports": {
     "import": "./dist/tapeworm.es.js",
-    "require": "./dist/tapeworm.cjs.js"
+    "require": "./dist/tapeworm.cjs.js",
+    "types": "./dist/index.d.ts"
   },
   "types": "dist/index.d.ts",
   "files": [

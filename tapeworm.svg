@@ -228,23 +228,56 @@
          in2="comp1"
          id="feComposite20" />
     </filter>
+    <defs>
+  <filter id="dropshadow"
+    filterUnits="userSpaceOnUse"
+    primitiveUnits="userSpaceOnUse"
+    x="-120" y="-120" width="752" height="752"
+    color-interpolation-filters="sRGB">
+
+    <feGaussianBlur in="SourceAlpha"
+      stdDeviation="6.7"
+      result="blur"/>
+
+    <feOffset in="blur"
+      dx="0"
+      dy="1.1"
+      result="offset"/>
+
+    <feFlood
+      flood-color="rgb(0,0,0)"
+      flood-opacity="0.32"
+      result="flood"/>
+
+    <feComposite
+      in="flood"
+      in2="offset"
+      operator="in"
+      result="shadow"/>
+
+    <feComposite
+      in="SourceGraphic"
+      in2="shadow"
+      operator="over"/>
+  </filter>
+</defs>
   </defs>
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1">
     <path
-       style="fill:none;stroke:url(#linearGradient7);stroke-width:64;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;filter:url(#filter20)"
+       style="fill:none;stroke:url(#linearGradient7);stroke-width:64;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;filter:url(#dropshadow)"
        d="m 96,192 c 0,0 101.16667,50.66667 160,64 58.83333,13.33333 160,64 160,64"
        id="path1"
        sodipodi:nodetypes="czc" />
     <path
-       style="fill:none;stroke:url(#linearGradient9);stroke-width:64;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;filter:url(#filter18)"
+       style="fill:none;stroke:url(#linearGradient9);stroke-width:64;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;filter:url(#dropshadow)"
        d="m 416,320 c 0,0 -96,50.66667 -160,64 -64,13.33333 -160,64 -160,64"
        id="path2"
        sodipodi:nodetypes="czc" />
     <path
-       style="fill:none;stroke:url(#linearGradient5);stroke-width:64;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;filter:url(#filter16)"
+       style="fill:none;stroke:url(#linearGradient5);stroke-width:64;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;filter:url(#dropshadow)"
        d="m 96,192 c 0.19565,0.29347 111.21781,-35.83995 160,-64 48.78219,-28.160051 160,-64 160,-64"
        id="path3"
        sodipodi:nodetypes="czc" />

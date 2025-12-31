@@ -67,8 +67,6 @@ class MultiplicationTool extends Tool {
   }
 }
 
-
-
 // Because this is a test file, we are going to run this locally using Ollama
 
 const ollama = new OllamaModel("http://localhost:11434", "gpt-oss:20b", {

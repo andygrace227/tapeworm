@@ -10,13 +10,17 @@
 [repo link](https://github.com/andygrace227/tapeworm)
 
 
-It provides an object-oriented API to create agents that run either on Node or within the browser.
+Tapeworm is an object-oriented TypeScript/JavaScript framework for building and deploying agents.
+
+It seeks to be the most ergonomic framework for agentic AI in the browser and in Node.
+
 
 **This project is currently in alpha and is under active development.**
 
 ## Directory:
 
 - [Tapeworm Core Package](https://github.com/andygrace227/tapeworm/tree/main/tapeworm#readme)
+  - [Tapeworm Core Documentation](https://andygrace227.github.io/tapeworm/tapeworm/index.html)
 - [Tapeworm Decorators Plugin](https://github.com/andygrace227/tapeworm/tree/main/tapeworm_decorators#readme)
 - [Tapeworm Examples](https://github.com/andygrace227/tapeworm/tree/main/tapeworm_examples#readme)
 

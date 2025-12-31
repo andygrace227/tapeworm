@@ -9,9 +9,7 @@
 [repo link](https://github.com/andygrace227/tapeworm)
 
 This is the root package for Tapeworm. You can consume other packages like @atgs/tapeworm_bedrock for AWS Bedrock support.
-
-It provides an object-oriented API to create agents that run either on Node or within the browser.
-
+x
 **This project is currently in alpha and is under active development.**
 
 ## Current Features
