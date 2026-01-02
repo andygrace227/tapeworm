@@ -1,6 +1,6 @@
 {
   "name": "@atgs/tapeworm",
-  "version": "0.1.8",
+  "version": "0.1.12",
   "type": "module",
   "main": "dist/tapeworm.cjs.js",
   "module": "dist/tapeworm.es.js",
@@ -13,8 +13,7 @@
   "types": "dist/index.d.ts",
   "files": [
     "dist",
-    "README.md",
-    "docs"
+    "README.md"
   ],
   "scripts": {
     "build": "npm run format && npm run test && vite build && npm run build:types && npm run docs",

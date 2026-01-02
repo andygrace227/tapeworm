@@ -1,17 +1,46 @@
 {
   "name": "@atgs/tapeworm_proxy_server",
   "version": "0.0.1",
+  "type": "module",
   "description": "",
-  "main": "index.js",
+  "main": "dist/tapewormProxyServer.cjs.js",
+  "module": "dist/tapewormProxyServer.es.js",
+  "browser": "dist/tapewormProxyServer.umd.js",
+  "exports": {
+    "import": "./dist/tapewormProxyServer.es.js",
+    "require": "./dist/tapewormProxyServer.cjs.js",
+    "types": "./dist/index.d.ts"
+  },
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npm run format && vite build && npm run build:types && npm run docs",
+    "docs": "typedoc --options typedoc.json",
+    "build:types": "tsc -p tsconfig.types.json",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,md}\"",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
+  "devDependencies": {
+      "@babel/preset-env": "^7.28.5",
+    "@babel/preset-typescript": "^7.28.5",
+    "@types/jest": "^30.0.0",
+        "jest": "^30.2.0"
+
+  },
   "dependencies": {
-    "@atgs/tapeworm": "file:.yalc/@atgs/tapeworm",
-    "typescript": "^5.9.3"
+    "@atgs/tapeworm": "^0.1.12",
+    "typescript": "^5.9.3",
+    "prettier": "^3.7.4",
+    "ts-node": "^10.9.2",
+    "typedoc": "^0.28.15",
+    "typedoc-plugin-rename-defaults": "^0.7.3",
+    "vite": "^7.2.7"
+
   }
 }
