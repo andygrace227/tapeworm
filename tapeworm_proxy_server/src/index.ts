@@ -93,8 +93,68 @@ export class TapewormProxyServerBuilder {
  * TapewormConnectionInformation is designed to let you use any framework for your server.
  */
 export class TapewormConnectionInformation {
-  ip!: string;
-  user!: string;
+  ip?: string;
+  user?: string;
+
+  /**
+   * Attempt to build a TapewormConnectionInformation directly from an Express incoming request.
+   * This method is able to handle the IP, and a user field, if you give it a way to extract it.
+   * @param req the request object for the request 
+   * @returns a connectioninfo builder that can be used with anything implementing ratelimiter.
+   */
+  static builderFromExpress(req: any, userExtractorFn : ((req : any) => string) | undefined = undefined ) :  TapewormConnectionInformationBuilder {
+      const ip = req.ip || req.headers["x-forwarded-for"]?.toString().split(",")[0].trim() || req.socket.remoteAddress;  
+      let user = undefined;
+      if (userExtractorFn != undefined) {
+        user = userExtractorFn(req);
+      }
+
+      return TapewormConnectionInformation.builder()
+        .ip(ip)
+        .user(user);
+  }
+
+  static builder() {
+    return new TapewormConnectionInformationBuilder();
+  }
+}
+
+
+/**
+ * The builder for a tapeworm connection info object.
+ */
+export class TapewormConnectionInformationBuilder {
+  _ip?: string;
+  _user?: string;
+
+  ip(ip : string | undefined) : TapewormConnectionInformationBuilder {
+    this._ip = ip;
+    return this;
+  }
+
+  user(user: string | undefined) : TapewormConnectionInformationBuilder {
+    this._user = user;
+    return this;
+  }
+
+  build() : TapewormConnectionInformation {
+    let connectionInfo = new TapewormConnectionInformation();
+    if (this._ip != undefined) {
+      connectionInfo.ip = this._ip;
+    }
+    if (this._user != undefined) {
+      connectionInfo.user = this._user;
+    }
+    return connectionInfo;
+  }
+
+
+  static fromExpress(req: any) {
+      const ip = req.ip || req.headers["x-forwarded-for"]?.toString().split(",")[0].trim() || req.socket.remoteAddress;  
+      let connectionInfo = new TapewormConnectionInformation();
+      connectionInfo.ip = ip;
+      return connectionInfo;
+  }
 }
 
 /**
@@ -145,23 +205,24 @@ export class ProcessLocalRateLimiter extends TapewormRateLimiter {
   grantedRequestsPerSecondReciprocal!: number;
   clients!: any;
 
-  constructor() {
+  constructor(granularity: TapewormConnectionInformationGranularity, requestsPerSecond: number) {
     super();
-        this.clients = {};
-
+    this.clients = {};
+    this.granularity = granularity;
+    this.grantedRequestsPerSecondReciprocal = 1 / requestsPerSecond;
   }
 
   /**
    * Attempt to grant the client access to the model.
    */
   attemptGrant(connectionInfo: TapewormConnectionInformation): boolean {
-    let identifier = connectionInfo.ip;
+    let identifier : string = connectionInfo.ip ?? "undefined";
     switch (this.granularity) {
       case TapewormConnectionInformationGranularity.Username:
-        identifier = connectionInfo.user;
+        identifier = connectionInfo.user  ?? "undefined";;
         break;
       default:
-        identifier = connectionInfo.ip;
+        identifier = connectionInfo.ip ?? "undefined";;
         break;
     }
 

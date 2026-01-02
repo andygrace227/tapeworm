@@ -19,9 +19,8 @@ class FakeModel extends Model {
 describe("Process Local Limiter works as expected", () => {
 
     it("rejects when user sends too many requests", () => {
-        let rateLimiter = new ProcessLocalRateLimiter();
-        rateLimiter.granularity = TapewormConnectionInformationGranularity.IP;
-        rateLimiter.grantedRequestsPerSecondReciprocal = 1;
+        let rateLimiter = new ProcessLocalRateLimiter(TapewormConnectionInformationGranularity.IP, 1);
+
         let connectionInfo = new TapewormConnectionInformation();
         connectionInfo.ip = "fakeIP";
 
@@ -30,9 +29,7 @@ describe("Process Local Limiter works as expected", () => {
     });
     
     it("does not reject when user sends rate limited requests", async () => {
-        let rateLimiter = new ProcessLocalRateLimiter();
-        rateLimiter.granularity = TapewormConnectionInformationGranularity.IP;
-        rateLimiter.grantedRequestsPerSecondReciprocal = 1;
+        let rateLimiter = new ProcessLocalRateLimiter(TapewormConnectionInformationGranularity.IP, 1);
         let connectionInfo = new TapewormConnectionInformation();
         connectionInfo.ip = "fakeIP";
 
@@ -42,9 +39,8 @@ describe("Process Local Limiter works as expected", () => {
     });
 
     it("can handle multiple users", async () => {
-        let rateLimiter = new ProcessLocalRateLimiter();
-        rateLimiter.granularity = TapewormConnectionInformationGranularity.IP;
-        rateLimiter.grantedRequestsPerSecondReciprocal = 1;
+        let rateLimiter = new ProcessLocalRateLimiter(TapewormConnectionInformationGranularity.IP, 1);
+
         let connectionInfo1 = new TapewormConnectionInformation();
         connectionInfo1.ip = "fakeIP";
 
