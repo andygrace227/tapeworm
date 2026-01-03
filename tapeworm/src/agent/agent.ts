@@ -50,6 +50,11 @@ export default class Agent {
   systemPrompt?: string;
 
   /**
+   * A description of the agent, used for multi-agent use cases.
+   */
+  description?: string;
+
+  /**
    * The tools this agent knows about and can run.
    */
   tools!: Tool[];
@@ -246,6 +251,7 @@ export class AgentBuilder {
   _conversation!: Conversation | undefined;
   _conversationManager: ConversationManager = new DefaultConversationManager();
   _toolNameToIndexMap: any | undefined;
+  _description?: string;
   _callback: (m: Message) => void = (m: Message) => defaultCallback(m);
 
   /**
@@ -255,6 +261,15 @@ export class AgentBuilder {
     this._name = name;
     return this;
   }
+
+  /**
+   * Set the description of the agent.
+   */
+  description(description: string): AgentBuilder {
+    this._description = description;
+    return this;
+  }
+
 
   /**
    * Set the system prompt of the agent.
@@ -325,6 +340,10 @@ export class AgentBuilder {
 
     if (this._systemPrompt != undefined) {
       agent.systemPrompt = this._systemPrompt;
+    }
+
+    if (this._description != undefined) {
+      agent.description = this._description;
     }
 
     return agent;

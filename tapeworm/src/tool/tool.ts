@@ -44,6 +44,15 @@ export default class Tool {
     throw new ToolNotDefinedError("Tool parameter schema not defined.");
   }
 
+  /**
+   * Get if the tool is a terminal action, as in invoking it should stop execution.
+   * This is used by Tapeworm's multi-agent system
+   */
+  getIsTerminalTool(): boolean {
+    return false;
+  }
+
+
   // @ts-ignore
   /**
    * Execute the tool against provided input parameters.
